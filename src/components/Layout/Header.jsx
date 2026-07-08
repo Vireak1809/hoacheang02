@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LogoIcon from "../../assets/logo.svg";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const translations = {
-  // Navigation & Labels
   home: { km: 'ទំព័រដើម', en: 'Home' },
   findTechnician: { km: 'ស្វែងរកជាង', en: 'Find Technician' },
   booking: { km: 'ការកក់', en: 'Bookings' },
@@ -12,27 +12,24 @@ const translations = {
   plumber: { km: 'ជាងទឹក', en: 'Plumber' },
   electrician: { km: 'ជាងភ្លើង', en: 'Electrician' },
   ac: { km: 'ម៉ាស៊ីនត្រជាក់', en: 'Air Conditioner' },
-  // User dropdown
   accountInfo: { km: 'ព័ត៌មានគណនី', en: 'Account Info' },
   myBookings: { km: 'ការកក់របស់ខ្ញុំ', en: 'My Bookings' },
   help: { km: 'ជំនួយ', en: 'Help' },
   logout: { km: 'ចាកចេញ', en: 'Logout' },
   account: { km: 'គណនី', en: 'Account' },
-  // Language bar
   khmer: { km: 'ខ្មែរ', en: 'Khmer' },
   english: { km: 'English', en: 'English' },
 };
 
 const Header = () => {
+  const { lang, setLang } = useLanguage(); // ✅ ហៅ hook ក្នុង component
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userDropdown, setUserDropdown] = useState(false);
   const [servicesDropdown, setServicesDropdown] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
-  const [lang, setLang] = useState('km'); // ភាសាដើមជាខ្មែរ
   const navigate = useNavigate();
   const location = useLocation();
 
-  // មុខងារបកប្រែ
   const t = (key) => translations[key]?.[lang] || key;
 
   const navLinks = [

@@ -20,7 +20,7 @@ const Login = () => {
         }}></div>
         <div className="relative z-10 max-w-lg">
           <h1 className="text-white text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            ហៅជាង - ជាងជំនាញ<br />ដល់ផ្ទះអ្នក
+            Call a Pro – Expert<br />Repair at Your Door
           </h1>
           <p className="text-on-primary-container text-lg mb-6">
             Trusted home repair experts at your fingertips.
@@ -54,20 +54,20 @@ const Login = () => {
           {/* Tabs */}
           <div className="flex border-b border-outline-variant">
             <button className="flex-1 py-4 text-xl font-semibold text-primary border-b-2 border-primary bg-surface-container-low transition">
-              ចូលប្រើប្រាស់
+              Login
             </button>
             <Link
               to="/register"
               className="flex-1 py-4 text-xl font-semibold text-on-surface-variant hover:bg-surface-container transition text-center"
             >
-              បង្កើតគណនី
+              Create Account
             </Link>
           </div>
 
           <div className="p-6">
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
-                <label className="text-sm font-medium text-on-surface block mb-1">លេខទូរស័ព្ទ</label>
+                <label className="text-sm font-medium text-on-surface block mb-1">Phone Number</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-xl">phone</span>
                   <input
@@ -80,7 +80,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-on-surface block mb-1">ពាក្យសម្ងាត់</label>
+                <label className="text-sm font-medium text-on-surface block mb-1">Password</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-xl">lock</span>
                   <input
@@ -102,13 +102,13 @@ const Login = () => {
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" className="w-4 h-4 rounded border-outline-variant text-primary" />
-                  <span className="text-sm text-on-surface-variant">ចងចាំខ្ញុំ</span>
+                  <span className="text-sm text-on-surface-variant">Remember me</span>
                 </label>
-                <button type="button" className="text-sm text-primary hover:underline">ភ្លេចពាក្យសម្ងាត់?</button>
+                <button type="button" className="text-sm text-primary hover:underline">Forgot password?</button>
               </div>
 
               <button type="submit" className="btn-primary w-full text-lg py-4">
-                ចូលប្រើប្រាស់
+                Login
               </button>
 
               <div className="relative py-4">
@@ -116,7 +116,7 @@ const Login = () => {
                   <div className="w-full border-t border-outline-variant"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-4 text-outline">ឬប្រើប្រាស់ជាមួយ</span>
+                  <span className="bg-white px-4 text-outline">Or use</span>
                 </div>
               </div>
 
@@ -132,8 +132,8 @@ const Login = () => {
               </div>
 
               <p className="text-center text-sm text-on-surface-variant pt-2">
-                មិនទាន់មានគណនី?{' '}
-                <Link to="/register" className="text-primary font-bold hover:underline">បង្កើតគណនី</Link>
+                Don't have an account?{' '}
+                <Link to="/register" className="text-primary font-bold hover:underline">Create Account</Link>
               </p>
             </form>
           </div>

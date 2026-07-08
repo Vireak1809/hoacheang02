@@ -6,20 +6,20 @@ const Services = () => {
   const services = [
     {
       icon: 'water_drop',
-      title: 'ជាងទឹក (Plumbing)',
-      items: ['ការលេចធ្លាយទឹក', 'ស្ទះលូ និងបង្គន់', 'ដំឡើងក្បាលម៉ាស៊ីន', 'ជួសជុលម៉ាស៊ីនបូមទឹក'],
+      title: 'Plumber (Plumbing)',
+      items: ['Water leaks', 'Drain & toilet clogs', 'Faucet installation', 'Water pump repair'],
       link: '/service/plumber'
     },
     {
       icon: 'bolt',
-      title: 'ជាងភ្លើង (Electric)',
-      items: ['ឆ្លងចរន្តអគ្គិសនី', 'ដំឡើងឧបករណ៍អគ្គិសនី', 'ប្តូរបណ្តាញខ្សែភ្លើង', 'ជួសជុលប្រអប់ហ្វុយហ្ស៊ីប'],
+      title: 'Electrician (Electrical)',
+      items: ['Power outages', 'Appliance installation', 'Rewiring', 'Fuse box repair'],
       link: '/service/electrician'
     },
     {
       icon: 'ac_unit',
-      title: 'ម៉ាស៊ីនត្រជាក់ (AC)',
-      items: ['លាងសម្អាតម៉ាស៊ីនត្រជាក់', 'បញ្ចូលហ្គាស', 'ជួសជុលម៉ាស៊ីនត្រជាក់', 'ដំឡើងម៉ាស៊ីនត្រជាក់ថ្មី'],
+      title: 'Air Conditioner (AC)',
+      items: ['AC cleaning', 'Gas refill', 'AC repair', 'New AC installation'],
       link: '/service/ac'
     }
   ];
@@ -28,9 +28,9 @@ const Services = () => {
     <div className="container-custom py-6 md:py-10 animate-enter">
       {/* Hero */}
       <div className="bg-primary-container rounded-2xl p-6 md:p-10 text-white text-center mb-8">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">សេវាកម្មរបស់យើង</h1>
+        <h1 className="text-3xl md:text-5xl font-bold mb-4">Our Services</h1>
         <p className="text-on-primary-container text-lg max-w-2xl mx-auto">
-          ស្វែងរកជាងជំនាញដែលអាចទុកចិត្តបាន ជាមួយនឹងសេវាកម្មជួសជុលគេហដ្ឋានគ្រប់ប្រភេទ។
+          Find trusted professional technicians for all types of home repair services.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ const Services = () => {
             </ul>
             <Link to={svc.link}>
               <button className="mt-6 w-full btn-primary text-sm">
-                មើលសេវាកម្ម
+                View Service
               </button>
             </Link>
           </div>
@@ -63,27 +63,27 @@ const Services = () => {
       <section className="mt-12 md:mt-16 bg-surface-container-low rounded-2xl p-6 md:p-10">
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="flex-1 space-y-4">
-            <h3 className="text-3xl font-bold text-primary">ហេតុអ្វីជ្រើសរើស Hao Chang?</h3>
+            <h3 className="text-3xl font-bold text-primary">Why Choose Hao Chang?</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-4">
                 <div className="p-2 bg-secondary/10 rounded-full"><span className="material-symbols-outlined text-secondary">verified_user</span></div>
                 <div>
-                  <h4 className="font-bold text-on-surface">ជាងមានជំនាញ</h4>
-                  <p className="text-sm text-on-surface-variant">រាល់ជាងទាំងអស់មានបទពិសោធន៍យ៉ាងតិច ៣ ឆ្នាំ</p>
+                  <h4 className="font-bold text-on-surface">Skilled Technicians</h4>
+                  <p className="text-sm text-on-surface-variant">All technicians have at least 3 years of experience</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="p-2 bg-secondary/10 rounded-full"><span className="material-symbols-outlined text-secondary">timer</span></div>
                 <div>
-                  <h4 className="font-bold text-on-surface">រហ័សទាន់ចិត្ត</h4>
-                  <p className="text-sm text-on-surface-variant">ជាងនឹងទៅដល់ក្នុងរយៈពេល ៣០ នាទី</p>
+                  <h4 className="font-bold text-on-surface">Fast Response</h4>
+                  <p className="text-sm text-on-surface-variant">Technician arrives within 30 minutes</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="p-2 bg-secondary/10 rounded-full"><span className="material-symbols-outlined text-secondary">receipt_long</span></div>
                 <div>
-                  <h4 className="font-bold text-on-surface">E-Invoice ច្បាស់លាស់</h4>
-                  <p className="text-sm text-on-surface-variant">ទទួលវិក្កយបត្រអេឡិចត្រូនិចភ្លាមៗ</p>
+                  <h4 className="font-bold text-on-surface">Clear E-Invoice</h4>
+                  <p className="text-sm text-on-surface-variant">Receive electronic invoice immediately</p>
                 </div>
               </div>
             </div>
@@ -98,13 +98,13 @@ const Services = () => {
 
       {/* CTA */}
       <section className="mt-12 md:mt-16 bg-primary rounded-2xl p-6 md:p-10 text-white text-center">
-        <h3 className="text-3xl font-bold mb-4">ត្រៀមខ្លួនដើម្បីកក់សេវា?</h3>
+        <h3 className="text-3xl font-bold mb-4">Ready to Book a Service?</h3>
         <p className="text-base text-white/80 mb-6 max-w-xl mx-auto">
-          ចុះឈ្មោះឥឡូវនេះ ដើម្បីចាប់ផ្ដើមប្រើប្រាស់សេវាកម្មជួសជុលគេហដ្ឋានដែលរហ័ស និងទុកចិត្តបាន។
+          Sign up now to start using our fast and reliable home repair services.
         </p>
         <Link to="/register">
           <button className="px-10 py-4 bg-secondary text-white font-bold rounded-full hover:scale-105 transition shadow-lg">
-            ចាប់ផ្ដើមប្រើប្រាស់
+            Get Started
           </button>
         </Link>
       </section>

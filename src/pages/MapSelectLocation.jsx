@@ -1,15 +1,62 @@
 // src/pages/MapSelectLocation.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
+
+const translations = {
+  pageTitle: { km: 'កំណត់ទីតាំងរបស់អ្នក', en: 'Set Your Location' },
+  pageSubtitle: { km: 'សូមបញ្ជាក់ទីតាំងដែលត្រូវការជាងមកផ្ដល់សេវា', en: 'Please specify the location where the technician should come' },
+  locationInfoTitle: { km: 'ព័ត៌មានទីតាំង', en: 'Location Information' },
+  buildingName: { km: 'ឈ្មោះបុរី / អគារ', en: 'Borey / Building Name' },
+  buildingNamePlaceholder: { km: 'បុរី ប៉េង ហួត', en: 'Peng Huot Borey' },
+  houseNumber: { km: 'លេខផ្ទះ', en: 'House Number' },
+  houseNumberPlaceholder: { km: 'A-12', en: 'A-12' },
+  streetNumber: { km: 'លេខផ្លូវ', en: 'Street Number' },
+  streetNumberPlaceholder: { km: 'ផ្លូវ ២៧១', en: 'Street 271' },
+  district: { km: 'ខណ្ឌ / សង្កាត់', en: 'District / Commune' },
+  // district options are proper names; we can keep them as they are but need bilingual
+  districtOption1: { km: 'បឹងកេងកងទី ១', en: 'Boeung Keng Kang 1' },
+  districtOption2: { km: 'ច្បារអំពៅ', en: 'Chbar Ampov' },
+  districtOption3: { km: 'ទួលគោក', en: 'Tuol Kouk' },
+  districtOption4: { km: 'សែនសុខ', en: 'Sen Sok' },
+  province: { km: 'រាជធានី / ខេត្ត', en: 'City / Province' },
+  provinceValue: { km: 'ភ្នំពេញ', en: 'Phnom Penh' },
+  landmark: { km: 'ចំណុចសម្គាល់', en: 'Landmark' },
+  landmarkPlaceholder: { km: 'នៅជិតទូរ ATM ធនាគារ ABA', en: 'Near ABA Bank ATM' },
+  phoneLabel: { km: 'លេខទូរស័ព្ទ', en: 'Phone Number' },
+  phonePlaceholder: { km: '012 345 678', en: '012 345 678' },
+  saveAs: { km: 'រក្សាទុកទីតាំងជា', en: 'Save location as' },
+  home: { km: 'ផ្ទះ', en: 'Home' },
+  work: { km: 'ការិយាល័យ', en: 'Work' },
+  other: { km: 'ផ្សេងៗ', en: 'Other' },
+  confirmButton: { km: 'បញ្ជាក់ទីតាំង', en: 'Confirm Location' },
+  searchPlaceholder: { km: 'ស្វែងរកទីតាំង...', en: 'Search location...' },
+  selectedLocation: { km: 'ទីតាំងដែលបានជ្រើស៖ បុរីប៉េងហួត បឹងស្នោរ', en: 'Selected: Peng Huot Borey, Boeung Snor' },
+};
 
 const MapSelectLocation = () => {
+  const { lang } = useLanguage();
+  const t = (key) => translations[key]?.[lang] || key;
   const [locationType, setLocationType] = useState('home');
+
+  const locationTypes = [
+    { id: 'home', icon: 'home', labelKey: 'home' },
+    { id: 'work', icon: 'work', labelKey: 'work' },
+    { id: 'other', icon: 'more_horiz', labelKey: 'other' },
+  ];
+
+  const districtOptions = [
+    { key: 'districtOption1' },
+    { key: 'districtOption2' },
+    { key: 'districtOption3' },
+    { key: 'districtOption4' },
+  ];
 
   return (
     <div className="container-custom py-6 md:py-10 animate-enter">
       <div className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary">កំណត់ទីតាំងរបស់អ្នក</h1>
-        <p className="text-base text-on-surface-variant">សូមបញ្ជាក់ទីតាំងដែលត្រូវការជាងមកផ្ដល់សេវា</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-primary">{t('pageTitle')}</h1>
+        <p className="text-base text-on-surface-variant">{t('pageSubtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -17,53 +64,48 @@ const MapSelectLocation = () => {
         <div className="lg:col-span-5">
           <div className="bg-white rounded-2xl shadow-sm border border-outline-variant p-6">
             <h2 className="text-2xl font-bold text-primary flex items-center gap-2 mb-6">
-              <span className="material-symbols-outlined text-secondary">location_on</span> ព័ត៌មានទីតាំង
+              <span className="material-symbols-outlined text-secondary">location_on</span> {t('locationInfoTitle')}
             </h2>
             <form className="space-y-4">
               <div>
-                <label className="text-sm text-on-surface">ឈ្មោះបុរី / អគារ</label>
-                <input className="input-field" placeholder="បុរី ប៉េង ហួត" type="text" />
+                <label className="text-sm text-on-surface">{t('buildingName')}</label>
+                <input className="input-field" placeholder={t('buildingNamePlaceholder')} type="text" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-on-surface">លេខផ្ទះ</label>
-                  <input className="input-field" placeholder="A-12" type="text" />
+                  <label className="text-sm text-on-surface">{t('houseNumber')}</label>
+                  <input className="input-field" placeholder={t('houseNumberPlaceholder')} type="text" />
                 </div>
                 <div>
-                  <label className="text-sm text-on-surface">លេខផ្លូវ</label>
-                  <input className="input-field" placeholder="ផ្លូវ ២៧១" type="text" />
+                  <label className="text-sm text-on-surface">{t('streetNumber')}</label>
+                  <input className="input-field" placeholder={t('streetNumberPlaceholder')} type="text" />
                 </div>
               </div>
               <div>
-                <label className="text-sm text-on-surface">ខណ្ឌ / សង្កាត់</label>
+                <label className="text-sm text-on-surface">{t('district')}</label>
                 <select className="input-field appearance-none">
-                  <option>បឹងកេងកងទី ១</option>
-                  <option>ច្បារអំពៅ</option>
-                  <option>ទួលគោក</option>
-                  <option>សែនសុខ</option>
+                  {districtOptions.map((d, idx) => (
+                    <option key={idx}>{t(d.key)}</option>
+                  ))}
                 </select>
               </div>
               <div>
-                <label className="text-sm text-on-surface">រាជធានី / ខេត្ត</label>
-                <input className="input-field bg-surface-container text-on-surface-variant font-medium cursor-not-allowed" readOnly value="ភ្នំពេញ" type="text" />
+                <label className="text-sm text-on-surface">{t('province')}</label>
+                <input className="input-field bg-surface-container text-on-surface-variant font-medium cursor-not-allowed" readOnly value={t('provinceValue')} type="text" />
               </div>
               <div>
-                <label className="text-sm text-on-surface">ចំណុចសម្គាល់</label>
-                <input className="input-field" placeholder="នៅជិតទូរ ATM ធនាគារ ABA" type="text" />
+                <label className="text-sm text-on-surface">{t('landmark')}</label>
+                <input className="input-field" placeholder={t('landmarkPlaceholder')} type="text" />
               </div>
               <div>
-                <label className="text-sm text-on-surface">លេខទូរស័ព្ទ</label>
-                <input className="input-field" placeholder="012 345 678" type="tel" />
+                <label className="text-sm text-on-surface">{t('phoneLabel')}</label>
+                <input className="input-field" placeholder={t('phonePlaceholder')} type="tel" />
               </div>
 
               <div>
-                <label className="text-sm text-on-surface block mb-2">រក្សាទុកទីតាំងជា</label>
+                <label className="text-sm text-on-surface block mb-2">{t('saveAs')}</label>
                 <div className="flex gap-2 flex-wrap">
-                  {[
-                    { id: 'home', icon: 'home', label: 'ផ្ទះ' },
-                    { id: 'work', icon: 'work', label: 'ការិយាល័យ' },
-                    { id: 'other', icon: 'more_horiz', label: 'ផ្សេងៗ' }
-                  ].map((type) => (
+                  {locationTypes.map((type) => (
                     <button
                       key={type.id}
                       type="button"
@@ -75,7 +117,7 @@ const MapSelectLocation = () => {
                       }`}
                     >
                       <span className="material-symbols-outlined text-sm">{type.icon}</span>
-                      {type.label}
+                      {t(type.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -83,7 +125,7 @@ const MapSelectLocation = () => {
 
               <Link to="/technicians">
                 <button className="w-full bg-primary hover:opacity-90 text-white py-3.5 rounded-xl font-bold text-center block transition shadow-lg">
-                  បញ្ជាក់ទីតាំង
+                  {t('confirmButton')}
                 </button>
               </Link>
             </form>
@@ -101,7 +143,7 @@ const MapSelectLocation = () => {
             <div className="absolute top-4 left-4 right-4 z-10">
               <div className="bg-white/80 backdrop-blur-md p-2 rounded-xl border border-white/50 shadow-lg flex items-center gap-3">
                 <span className="material-symbols-outlined text-on-surface-variant ml-2">search</span>
-                <input className="flex-1 bg-transparent border-none focus:ring-0 text-base py-1" placeholder="ស្វែងរកទីតាំង..." type="text" />
+                <input className="flex-1 bg-transparent border-none focus:ring-0 text-base py-1" placeholder={t('searchPlaceholder')} type="text" />
               </div>
             </div>
 
@@ -131,7 +173,7 @@ const MapSelectLocation = () => {
             {/* Address bar */}
             <div className="absolute bottom-0 left-0 right-0 bg-primary text-white px-4 py-3 flex items-center gap-3 z-10">
               <span className="material-symbols-outlined text-secondary-fixed text-xl">explore</span>
-              <p className="text-sm font-medium">ទីតាំងដែលបានជ្រើស៖ បុរីប៉េងហួត បឹងស្នោរ</p>
+              <p className="text-sm font-medium">{t('selectedLocation')}</p>
             </div>
           </div>
         </div>

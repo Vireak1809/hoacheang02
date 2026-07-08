@@ -46,21 +46,21 @@ const Register = () => {
           backgroundImage: 'url(https://images.unsplash.com/photo-1581093588401-fbb62a02f120?w=800)'
         }}></div>
         <div className="relative z-10 max-w-lg text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">ចូលរួមជាមួយ ហៅជាង</h1>
-          <p className="text-primary-fixed text-lg mb-6">កក់អ្នកជំនាញសម្រាប់ការងារ បរិក្ខារទឹក អគ្គិសនី និងម៉ាស៊ីនត្រជាក់។</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">Join Hao Chang</h1>
+          <p className="text-primary-fixed text-lg mb-6">Book professionals for plumbing, electrical, and AC work.</p>
           <div className="space-y-4">
             <div className="bg-white/10 backdrop-blur p-4 rounded-xl flex items-center border border-white/20">
               <span className="material-symbols-outlined text-secondary-fixed text-3xl mr-4">verified_user</span>
               <div>
                 <h3 className="text-white font-bold">Verified Technicians</h3>
-                <p className="text-primary-fixed text-sm">បានត្រួតពិនិត្យច្បាស់លាស់</p>
+                <p className="text-primary-fixed text-sm">Thoroughly vetted</p>
               </div>
             </div>
             <div className="bg-white/10 backdrop-blur p-4 rounded-xl flex items-center border border-white/20">
               <span className="material-symbols-outlined text-secondary-fixed text-3xl mr-4">calendar_month</span>
               <div>
                 <h3 className="text-white font-bold">Easy Booking</h3>
-                <p className="text-primary-fixed text-sm">កក់ទុកងាយស្រួល</p>
+                <p className="text-primary-fixed text-sm">Quick reservation</p>
               </div>
             </div>
           </div>
@@ -76,22 +76,22 @@ const Register = () => {
               to="/login"
               className="flex-1 py-4 text-xl font-semibold text-on-surface-variant hover:bg-surface-container transition text-center"
             >
-              ចូលប្រើប្រាស់
+              Login
             </Link>
             <button className="flex-1 py-4 text-xl font-semibold text-primary border-b-2 border-primary bg-surface-container-high transition">
-              បង្កើតគណនី
+              Create Account
             </button>
           </div>
 
           <div className="p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm text-on-surface block mb-1">ឈ្មោះពេញ</label>
-                <input className="input-field" placeholder="បញ្ចូលឈ្មោះ" type="text" required />
+                <label className="text-sm text-on-surface block mb-1">Full Name</label>
+                <input className="input-field" placeholder="Enter name" type="text" required />
               </div>
 
               <div>
-                <label className="text-sm text-on-surface block mb-1">លេខទូរស័ព្ទ</label>
+                <label className="text-sm text-on-surface block mb-1">Phone Number</label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">+855</span>
                   <input className="input-field pl-20" placeholder="12 345 678" type="tel" required />
@@ -99,13 +99,13 @@ const Register = () => {
               </div>
 
               <div>
-                <label className="text-sm text-on-surface block mb-1">អ៊ីមែល (មិនបង្ខំ)</label>
+                <label className="text-sm text-on-surface block mb-1">Email (Optional)</label>
                 <input className="input-field" placeholder="example@mail.com" type="email" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-on-surface block mb-1">លេខសម្ងាត់</label>
+                  <label className="text-sm text-on-surface block mb-1">Password</label>
                   <div className="relative">
                     <input
                       className="input-field pr-12"
@@ -124,7 +124,7 @@ const Register = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm text-on-surface block mb-1">បញ្ជាក់</label>
+                  <label className="text-sm text-on-surface block mb-1">Confirm</label>
                   <div className="relative">
                     <input
                       className="input-field pr-12"
@@ -147,18 +147,19 @@ const Register = () => {
               <label className="flex items-start gap-3 cursor-pointer pt-2">
                 <input type="checkbox" className="mt-1 w-4 h-4 text-secondary border-outline rounded" required />
                 <span className="text-xs text-on-surface-variant">
-                  ខ្ញុំយល់ព្រមតាម <button type="button" className="text-primary font-bold hover:underline">លក្ខខណ្ឌប្រើប្រាស់</button> និង{' '}
-                  <button type="button" className="text-primary font-bold hover:underline">គោលការណ៍ឯកជនភាព</button>
+                  I agree to the{' '}
+                  <button type="button" className="text-primary font-bold hover:underline">Terms of Service</button> and{' '}
+                  <button type="button" className="text-primary font-bold hover:underline">Privacy Policy</button>
                 </span>
               </label>
 
               <button type="submit" className="btn-secondary w-full text-xl py-4">
-                បង្កើតគណនី
+                Create Account
               </button>
 
               <div className="relative flex items-center py-2">
                 <div className="flex-grow border-t border-outline-variant"></div>
-                <span className="flex-shrink mx-4 text-xs text-on-surface-variant">ឬបន្តជាមួយ</span>
+                <span className="flex-shrink mx-4 text-xs text-on-surface-variant">Or continue with</span>
                 <div className="flex-grow border-t border-outline-variant"></div>
               </div>
 
@@ -174,7 +175,8 @@ const Register = () => {
               </div>
 
               <p className="text-center text-sm text-on-surface-variant pt-4">
-                មានគណនីរួចហើយ? <Link to="/login" className="text-primary font-bold hover:underline">ចូលប្រើប្រាស់</Link>
+                Already have an account?{' '}
+                <Link to="/login" className="text-primary font-bold hover:underline">Login</Link>
               </p>
             </form>
           </div>
@@ -190,9 +192,9 @@ const Register = () => {
           <div className="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="material-symbols-outlined text-primary text-3xl">sms</span>
           </div>
-          <h2 className="text-2xl font-bold text-primary mb-2">បញ្ជាក់លេខទូរស័ព្ទ</h2>
+          <h2 className="text-2xl font-bold text-primary mb-2">Verify Phone Number</h2>
           <p className="text-base text-on-surface-variant mb-6">
-            លេខកូដ ៦ ខ្ទង់ត្រូវបានផ្ញើទៅ <span className="font-bold text-on-surface">012 345 678</span>
+            A 6‑digit code was sent to <span className="font-bold text-on-surface">012 345 678</span>
           </p>
           <div className="flex justify-center gap-2 mb-6">
             {otp.map((digit, i) => (
@@ -212,11 +214,11 @@ const Register = () => {
             onClick={handleOtpConfirm}
             className="btn-primary w-full text-sm py-4"
           >
-            បញ្ជាក់
+            Verify
           </button>
           <div className="text-sm mt-4">
-            <span className="text-on-surface-variant">មិនបានទទួល? </span>
-            <button type="button" className="text-secondary font-bold hover:underline">ផ្ញើឡើងវិញ</button>
+            <span className="text-on-surface-variant">Didn't receive it? </span>
+            <button type="button" className="text-secondary font-bold hover:underline">Resend</button>
           </div>
           <button
             className="absolute top-4 right-4 text-on-surface-variant hover:text-error transition"
