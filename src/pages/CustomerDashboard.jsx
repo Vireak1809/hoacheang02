@@ -1,0 +1,99 @@
+// pages/CustomerDashboard.jsx
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const CustomerDashboard = () => {
+  const services = [
+    { icon: 'plumbing', label: 'ជាងទឹក', price: 'ចាប់ផ្ដើមពី $15', link: '/select/plumber' },
+    { icon: 'electrical_services', label: 'ជាងអគ្គិសនី', price: 'ចាប់ផ្ដើមពី $20', link: '/select/electrician' },
+    { icon: 'ac_unit', label: 'ម៉ាស៊ីនត្រជាក់', price: 'ចាប់ផ្ដើមពី $18', link: '/select/ac' }
+  ];
+
+  return (
+    <div className="container-custom py-6 md:py-10 animate-enter">
+      {/* Greeting */}
+      <section className="mb-6 md:mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-primary">សួស្ដី, សុភា</h1>
+        <p className="text-lg text-on-surface-variant">តើអ្នកត្រូវការជាងប្រភេទណាថ្ងៃនេះ?</p>
+      </section>
+
+      {/* Search */}
+      <div className="max-w-2xl mb-8">
+        <div className="relative">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
+          <input
+            className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl shadow-lg focus:ring-2 focus:ring-primary/20 outline-none text-base"
+            placeholder="ស្វែងរកសេវាកម្ម..."
+          />
+          <Link to="/technicians">
+            <button className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:opacity-90 transition">
+              ស្វែងរក
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Service Categories */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        {services.map((svc, idx) => (
+          <Link
+            key={idx}
+            to={svc.link}
+            className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition border border-transparent hover:border-primary/10 text-center"
+          >
+            <div className="w-20 h-20 rounded-full bg-surface-container-lowest flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+              <span className="material-symbols-outlined text-4xl text-primary">{svc.icon}</span>
+            </div>
+            <h3 className="text-xl font-bold text-primary">{svc.label}</h3>
+            <p className="text-sm text-on-surface-variant">{svc.price}</p>
+          </Link>
+        ))}
+      </div>
+
+      {/* Emergency Banner */}
+      <div className="relative rounded-3xl overflow-hidden mb-8">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
+        <div className="relative p-6 md:p-10 flex flex-col items-start gap-4 max-w-lg">
+          <span className="px-3 py-1 bg-secondary text-white rounded-full text-xs font-bold uppercase tracking-wider">សេវាបន្ទាន់ 24/7</span>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">ត្រូវការជាងបន្ទាន់?</h2>
+          <p className="text-white/80 text-base">យើងមានបច្ចេកទេសជំនាញៗនៅក្បែរលោកអ្នកបំផុត។</p>
+          <Link to="/problem-detail">
+            <button className="mt-2 bg-secondary hover:bg-secondary-container text-white px-6 md:px-8 py-3 md:py-4 rounded-xl text-base md:text-lg font-bold shadow-lg hover:scale-105 transition flex items-center gap-2">
+              <span className="material-symbols-outlined">call</span> ហៅជាងបន្ទាន់
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Recent Booking */}
+      <div className="bg-white rounded-3xl p-6 shadow-sm border border-outline-variant/30 max-w-md">
+        <h2 className="text-2xl font-bold text-primary mb-4">ការកក់ចុងក្រោយ</h2>
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-12 rounded-2xl bg-surface-container overflow-hidden">
+            <img
+              className="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_oRyXbP503tpXnC3vuL68JH0woLhiBJLQ4T92NIxEeIi-pFaUKHuW1CXVd9icuXDJogc5gw1O4q6WDDdZ0meQ5HuD62qBwQbhN9CvnpQgCUUGHpi1gKw_CzyCA4tOoY-SVRC5gEjvFKoNxFpysJxLOu2pugjpXZdplEMvgLPhYVZsfMycvMp-QMhdudO0O0Y7t5xRxi6BJKDtR74u8GZRSTOMqhHsSJwEcnmByVItOF3wJP3UI5Q3vdv1S3u45hxr5djBGWDlUzc"
+              alt="Technician"
+            />
+          </div>
+          <div>
+            <h4 className="font-medium">ជាង វិច្ឆិកា</h4>
+            <p className="text-sm text-on-surface-variant">ជំនាញជួសជុលម៉ាស៊ីនត្រជាក់</p>
+          </div>
+          <span className="ml-auto px-3 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full text-xs font-bold">កំពុងមកដល់</span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-on-surface-variant">តម្លៃសរុប</span>
+          <span className="font-bold text-primary">$18.00</span>
+        </div>
+        <Link to="/booking/track">
+          <button className="w-full mt-4 py-3 border border-primary text-primary rounded-xl text-sm font-medium hover:bg-primary/5 transition">
+            មើលព័ត៌មានលម្អិត
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default CustomerDashboard;
