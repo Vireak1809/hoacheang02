@@ -1,7 +1,8 @@
 // pages/Home.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const translations = {
   heroTitle: { km: 'ហៅជាងជំនាញ បានយ៉ាងងាយ និងរហ័ស', en: 'Find Skilled Technicians, Easy & Fast' },
@@ -50,6 +51,16 @@ const translations = {
 
 const Home = () => {
   const { lang } = useLanguage();
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  // ប្រសិនបើបាន login រួចហើយ បញ្ជូនទៅ dashboard
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
+
   const t = (key) => translations[key]?.[lang] || key;
 
   const services = [
