@@ -54,7 +54,7 @@ const Home = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
-  // ប្រសិនបើបាន login រួចហើយ បញ្ជូនទៅ dashboard
+  // Redirect to dashboard if already logged in
   useEffect(() => {
     if (isLoggedIn) {
       navigate('/dashboard', { replace: true });
@@ -70,7 +70,7 @@ const Home = () => {
       descKey: 'plumberDesc',
       priceKey: 'plumberPrice',
       link: '/service/plumber',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBKx4NROYSVO4uXwWtZHUD6w0MN1v5vs5AESVRw6I1WTZ5ReiVH4a0fTJnFttRbSV1QxFhbW-9O3jYfmQpp_rov5KK05EUurxhgyTAq3TBecbOBJzFhwycdS9CGNIYKYRWh1Z-ngLQgPtl5RKYSZZBg5Ty_V-14yL48PXiHzDDMmt9KKJnUJoYzNq5htUpxVVj0CJQ4DDw1ocmQYkha5wc4EGgXqIB0tmKBOavt76n2YoSZbvmvRy78ddG4ZrXglLEAwi_Gil9fqko'
+      image: 'https://savvyplumbing.co.za/wp-content/uploads/2021/06/professional-plumber.jpg'
     },
     {
       icon: 'electrical_services',
@@ -90,6 +90,11 @@ const Home = () => {
     }
   ];
 
+  // Fallback image – if the primary image fails, use a seeded placeholder
+  const getFallbackImage = (titleKey) => {
+    return `https://picsum.photos/seed/${titleKey}/600/400`;
+  };
+
   const steps = [
     { num: lang === 'km' ? '១' : '1', labelKey: 'step1Label', subKey: 'step1Sub' },
     { num: lang === 'km' ? '២' : '2', labelKey: 'step2Label', subKey: 'step2Sub' },
@@ -100,7 +105,7 @@ const Home = () => {
 
   return (
     <div className="animate-enter">
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="relative w-full min-h-[500px] md:min-h-[600px] overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center" style={{
           backgroundImage: 'url(https://lh3.googleusercontent.com/aida-public/AB6AXuC5EPZhnWxYaQc1dEEV-v3z9yN9-87s2psdyTRcyEV1bEjPF42-jTV9Xk6VdfshoIZVdF5DmcstWjD8ahUGiB81CtKQ6EQKWitBYWviAZlscbWNWw-VWerlo9oI6HEdcRa2Jnlf9M1WHGE6kK9ghuwDpo6BbRVWfY6uZWVpYP7plOWsSfKvO27Yc18hgkWdpYpr4fb2oEnH0uC2cPaVqHGlQnEpfSGw298KKEbXsO3JWH52TYGRkgaxrwR3TebOGypOySlJwiHP6v8)'
@@ -124,7 +129,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services Preview */}
+      {/* Services Preview – with image fallback */}
       <section className="py-12 md:py-16 bg-surface-container-low">
         <div className="container-custom">
           <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-3">{t('popularServices')}</h2>
@@ -141,6 +146,10 @@ const Home = () => {
                     src={svc.image}
                     alt={t(svc.titleKey)}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    // 🔧 FALLBACK: if image fails, use a placeholder
+                    onError={(e) => {
+                      e.target.src = getFallbackImage(svc.titleKey);
+                    }}
                   />
                   <div className="absolute top-3 left-3 bg-primary/90 text-white px-3 py-1 rounded-full text-xs font-medium">
                     {t(svc.titleKey)}
@@ -199,7 +208,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA Section */}
       <section className="py-12 md:py-16 bg-primary text-white">
         <div className="container-custom text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">{t('ctaTitle')}</h2>
