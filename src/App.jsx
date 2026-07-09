@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider } from './contexts/AuthContext';
-import PrivateRoute from './components/PrivateRoute'; 
+import PrivateRoute from './components/PrivateRoute';
 
-// Lazy load pages (excluding CustomerDashboard – we'll import it directly for root)
+// Lazy imports (same as before)
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
@@ -52,8 +52,7 @@ function App() {
               }
             >
               <Routes>
-                
-                {/* ===== PUBLIC ROUTES (No login required) ===== */}
+                {/* ===== PUBLIC ROUTES ===== */}
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
@@ -65,8 +64,9 @@ function App() {
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/help" element={<HelpSupport />} />   {/* Public now */}
 
-                {/* ===== PROTECTED ROUTES (Require login) ===== */}
+                {/* ===== PROTECTED ROUTES ===== */}
                 <Route path="/dashboard" element={<PrivateRoute><CustomerDashboard /></PrivateRoute>} />
                 <Route path="/technicians" element={<PrivateRoute><AvailableTechnicians /></PrivateRoute>} />
                 <Route path="/technician/:id" element={<PrivateRoute><TechnicianProfile /></PrivateRoute>} />
@@ -74,7 +74,6 @@ function App() {
                 <Route path="/booking/track" element={<PrivateRoute><BookingTracking /></PrivateRoute>} />
                 <Route path="/messages" element={<PrivateRoute><Messages /></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><CustomerProfile /></PrivateRoute>} />
-                <Route path="/help" element={<PrivateRoute><HelpSupport /></PrivateRoute>} />
                 <Route path="/select/plumber" element={<PrivateRoute><SelectServicePlumber /></PrivateRoute>} />
                 <Route path="/select/electrician" element={<PrivateRoute><SelectServiceElectrician /></PrivateRoute>} />
                 <Route path="/select/ac" element={<PrivateRoute><SelectServiceAC /></PrivateRoute>} />
@@ -86,8 +85,9 @@ function App() {
                 <Route path="/payment" element={<PrivateRoute><PaymentConfirmation /></PrivateRoute>} />
                 <Route path="/rating" element={<PrivateRoute><RatingReview /></PrivateRoute>} />
 
-                {/* Dashboard is also accessible separately */}
-                <Route path="/dashboard" element={<CustomerDashboard />} />
+                {/* Optional: Redirect unknown routes to home (or leave blank) */}
+                {/* If you want to redirect unknown routes to home, uncomment the line below */}
+                {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
               </Routes>
             </Suspense>
           </Layout>
@@ -97,4 +97,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;​

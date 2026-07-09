@@ -14,7 +14,6 @@ const translations = {
   streetNumber: { km: 'លេខផ្លូវ', en: 'Street Number' },
   streetNumberPlaceholder: { km: 'ផ្លូវ ២៧១', en: 'Street 271' },
   district: { km: 'ខណ្ឌ / សង្កាត់', en: 'District / Commune' },
-  // district options are proper names; we can keep them as they are but need bilingual
   districtOption1: { km: 'បឹងកេងកងទី ១', en: 'Boeung Keng Kang 1' },
   districtOption2: { km: 'ច្បារអំពៅ', en: 'Chbar Ampov' },
   districtOption3: { km: 'ទួលគោក', en: 'Tuol Kouk' },
@@ -59,9 +58,10 @@ const MapSelectLocation = () => {
         <p className="text-base text-on-surface-variant">{t('pageSubtitle')}</p>
       </div>
 
+      {/* Grid: 6/6 instead of 5/7 to make map smaller */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Form */}
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-6">
           <div className="bg-white rounded-2xl shadow-sm border border-outline-variant p-6">
             <h2 className="text-2xl font-bold text-primary flex items-center gap-2 mb-6">
               <span className="material-symbols-outlined text-secondary">location_on</span> {t('locationInfoTitle')}
@@ -122,7 +122,7 @@ const MapSelectLocation = () => {
                   ))}
                 </div>
               </div>
-
+              <br></br>
               <Link to="/technicians">
                 <button className="w-full bg-primary hover:opacity-90 text-white py-3.5 rounded-xl font-bold text-center block transition shadow-lg">
                   {t('confirmButton')}
@@ -132,9 +132,9 @@ const MapSelectLocation = () => {
           </div>
         </div>
 
-        {/* Right: Map */}
-        <div className="lg:col-span-7">
-          <div className="bg-white rounded-2xl shadow-sm border border-outline-variant overflow-hidden h-full min-h-[400px] relative">
+        {/* Right: Map - reduced min-height and made slightly smaller */}
+        <div className="lg:col-span-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-outline-variant overflow-hidden h-full min-h-[320px] relative">
             <div className="absolute inset-0 bg-cover bg-center" style={{
               backgroundImage: 'url(https://lh3.googleusercontent.com/aida-public/AB6AXuBvHgLU1-Ti5LzfAZL_beg_CjI8N1dPMxcliFGQvhBaLZwaq3r8fwxvoFA5YM9DzbU9wAp970Hb1O9wPDd5C6i-hxuYVNwR8tPmCRpKGwBB5HO0pouZFuuufSd6Q-THsePw8w7tiEEqVOQE0zdouK10jxt-V4ngx6X_DjPfyx0FpgcrGWVqOfdaYXzcHmCUVbgaUTr2GMa5GqRurcB1VRLuuwSQIZlYb6HVmLNqZt1KsxrafZu4dIrrpEg3BgO8REQo7zNa0_5zMuI)'
             }}></div>

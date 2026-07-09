@@ -1,4 +1,4 @@
-// pages/PaymentConfirmation.jsx
+// src/pages/PaymentConfirmation.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -28,6 +28,23 @@ const translations = {
   technician: { km: 'ជាងជំនាញ', en: 'Technician' },
   techName: { km: 'សុខ វណ្ណៈ', en: 'Sok Vannak' },
   techRating: { km: '4.9 (124 reviews)', en: '4.9 (124 reviews)' },
+
+  // Rating modal
+  ratingTitle: { km: 'វាយតម្លៃសេវាកម្ម', en: 'Rate the Service' },
+  ratingCommentLabel: { km: 'សរសេរមតិយោបល់', en: 'Write a review' },
+  ratingCommentPlaceholder: { km: 'តើអ្នកយល់យ៉ាងណាចំពោះសេវាកម្មនេះ?', en: 'What do you think about this service?' },
+  ratingTagsLabel: { km: 'ជ្រើសរើសពាក្យគន្លឹះ', en: 'Select tags' },
+  tagFast: { km: 'មកលឿន', en: 'Fast arrival' },
+  tagGoodService: { km: 'សេវាល្អ', en: 'Good service' },
+  tagAffordable: { km: 'តម្លៃសមរម្យ', en: 'Affordable' },
+  tagPolite: { km: 'សុភាពរាបសារ', en: 'Polite' },
+  tagGoodRepair: { km: 'ជួសជុលបានល្អ', en: 'Repaired well' },
+  ratingSubmit: { km: 'ផ្ញើការវាយតម្លៃ', en: 'Submit Review' },
+  ratingSkip: { km: 'រំលង', en: 'Skip' },
+  ratingAlertNoRating: { km: 'សូមផ្តល់ផ្កាយវាយតម្លៃជាមុនសិន!', en: 'Please provide a star rating first!' },
+  ratingSuccessTitle: { km: 'អរគុណសម្រាប់ការវាយតម្លៃ!', en: 'Thank you for your review!' },
+  ratingSuccessMsg: { km: 'មតិយោបល់របស់អ្នកត្រូវបានរក្សាទុក។', en: 'Your feedback has been saved.' },
+  ratingClose: { km: 'យល់ព្រម', en: 'Okay' },
 };
 
 const PaymentConfirmation = () => {
@@ -37,15 +54,57 @@ const PaymentConfirmation = () => {
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+
+  // Rating states
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [ratingSubmitted, setRatingSubmitted] = useState(false);
 
   const handleConfirm = () => {
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
-      setIsSuccess(true);
+      setShowRatingModal(true);   // 1) show rating popup after processing
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 1500);
   };
+
+  const toggleTag = (tagKey) => {
+    setSelectedTags(prev =>
+      prev.includes(tagKey) ? prev.filter(k => k !== tagKey) : [...prev, tagKey]
+    );
+  };
+
+  const handleRatingSubmit = (e) => {
+    e.preventDefault();
+    if (rating === 0) {
+      alert(t('ratingAlertNoRating'));
+      return;
+    }
+    // Send data to backend here...
+    setRatingSubmitted(true);
+    // After submission, close modal and show success card
+    setTimeout(() => {
+      closeRatingModal(true);
+    }, 1000); // brief delay to show "thank you" inside modal
+  };
+
+  const closeRatingModal = (showSuccess = false) => {
+    setShowRatingModal(false);
+    if (showSuccess) {
+      setIsSuccess(true);
+    }
+  };
+
+  // When user skips rating, also go to success
+  const handleSkip = () => {
+    setShowRatingModal(false);
+    setIsSuccess(true);
+  };
+
+  const tagKeys = ['tagFast', 'tagGoodService', 'tagAffordable', 'tagPolite', 'tagGoodRepair'];
 
   return (
     <div className="container-custom py-6 md:py-10 animate-enter">
@@ -61,6 +120,7 @@ const PaymentConfirmation = () => {
             <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant">
               <h2 className="text-2xl font-bold text-primary mb-4">{t('paymentMethod')}</h2>
               <div className="space-y-4">
+                {/* Cash */}
                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition ${
                   paymentMethod === 'cash'
                     ? 'border-primary bg-primary-container/10'
@@ -83,6 +143,7 @@ const PaymentConfirmation = () => {
                   </div>
                 </label>
 
+                {/* KHQR */}
                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition ${
                   paymentMethod === 'khqr'
                     ? 'border-primary bg-primary-container/10'
@@ -103,6 +164,7 @@ const PaymentConfirmation = () => {
                   </div>
                 </label>
 
+                {/* Bank Transfer */}
                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition ${
                   paymentMethod === 'bank'
                     ? 'border-primary bg-primary-container/10'
@@ -131,8 +193,8 @@ const PaymentConfirmation = () => {
               </div>
             </div>
 
-            {/* Pending View */}
-            {!isSuccess && (
+            {/* Pending / Success Views */}
+            {!isSuccess && !showRatingModal && (
               <div className="space-y-3">
                 <button
                   onClick={handleConfirm}
@@ -147,7 +209,8 @@ const PaymentConfirmation = () => {
                     t('iHavePaid')
                   )}
                 </button>
-                <Link to="/invoice">
+                {/* REMOVED <br /> – now using margin-top on the link */}
+                <Link to="/invoice" className="block mt-4">
                   <button className="w-full py-4 border border-outline text-primary rounded-xl text-sm font-medium hover:bg-surface-container transition">
                     {t('back')}
                   </button>
@@ -155,7 +218,7 @@ const PaymentConfirmation = () => {
               </div>
             )}
 
-            {/* Success View */}
+            {/* Payment Success Card – appears after rating is done or skipped */}
             {isSuccess && (
               <div className="bg-surface-container-high p-8 rounded-xl border border-primary/20 text-center shadow-xl animate-success">
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-full mb-6">
@@ -177,7 +240,7 @@ const PaymentConfirmation = () => {
             )}
           </div>
 
-          {/* Right: Summary */}
+          {/* Right: Summary (unchanged) */}
           <div className="md:col-span-4">
             <div className="sticky top-24 space-y-6">
               <div className="bg-surface-container-low p-6 rounded-xl border border-outline-variant">
@@ -204,8 +267,8 @@ const PaymentConfirmation = () => {
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary-container">
                   <img
                     className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFG9_Tv6WbLH4GVw-0IMbeZQoM48R7xKRO-Yw79O-h738LakCeqbQmfsdNCBq-Uzd3mCoWzFSbL5h-fAxEwYjZpTmlrdtULRNDg1j-fgxMyEIKdb3_F7V2LCM8y4yic7KSLQ2zwQQL1DOEPX-yhr1E_L7btvmI_ZrLetAIytm5bebFgQElBEsboK0ZgiZNpf3ndDDejdJxBto7B947e9Bhf69UrDjusMSYdbRE4DLCJCkfW0Q0XZqliQVk4WVO04A1Gyo1nZlZyMk"
-                    alt="Tech"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrZ4Hm2qA74O1m50KELc0_l2XFZFyHPDYyqjEq05PNFLltu-IOesecFy1-G-jhLFLszSRzCp3pQliiTtOAZgQM7BWxhEmDi4-lVO1knzsyOxf6dNLzAbSViTgCG8m4xS-24PMOkf0QwWK3-kWHykLqHWms9p6A8NDzbYxWt2jmr1imBXTYHNIKgYuLzTKBAM2mU6OYSipsrLDPGDNeaL76gLTChRz1HSO5dpIxRVDW1ImF_memWA7Z_1dQoakzR8lIf6_E_UB_bb0"
+                    alt="Technician"
                   />
                 </div>
                 <div>
@@ -221,6 +284,97 @@ const PaymentConfirmation = () => {
           </div>
         </div>
       </div>
+
+      {/* Rating Modal (popup) */}
+      {showRatingModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-xl animate-enter max-h-[90vh] overflow-y-auto">
+            {!ratingSubmitted ? (
+              <>
+                <h2 className="text-2xl font-bold text-primary text-center mb-6">{t('ratingTitle')}</h2>
+
+                {/* Stars */}
+                <div className="flex justify-center gap-2 mb-6">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      className="transition hover:scale-110 active:scale-95"
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      onClick={() => setRating(star)}
+                    >
+                      <span className={`material-symbols-outlined text-5xl transition-colors ${
+                        star <= (hoverRating || rating) ? 'text-secondary-container' : 'text-outline-variant'
+                      }`}>
+                        star
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Comment */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('ratingCommentLabel')}</label>
+                  <textarea
+                    className="w-full h-24 rounded-lg border-outline-variant bg-surface-container-low focus:ring-primary focus:border-primary p-3 text-sm"
+                    placeholder={t('ratingCommentPlaceholder')}
+                  ></textarea>
+                </div>
+
+                {/* Tags */}
+                <div className="mb-6">
+                  <p className="text-sm font-medium text-on-surface-variant mb-2">{t('ratingTagsLabel')}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {tagKeys.map(key => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => toggleTag(key)}
+                        className={`px-3 py-1.5 rounded-full border text-xs transition ${
+                          selectedTags.includes(key)
+                            ? 'bg-primary text-white border-primary'
+                            : 'border-outline-variant hover:bg-surface-container-high'
+                        }`}
+                      >
+                        {t(key)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleRatingSubmit}
+                    className="flex-1 py-3 bg-primary text-white rounded-xl font-medium hover:opacity-90 transition"
+                  >
+                    {t('ratingSubmit')}
+                  </button>
+                  <button
+                    onClick={handleSkip}
+                    className="flex-1 py-3 border border-outline-variant text-on-surface-variant rounded-xl font-medium hover:bg-surface-container transition"
+                  >
+                    {t('ratingSkip')}
+                  </button>
+                </div>
+              </>
+            ) : (
+              /* Thank you inside modal before showing success card */
+              <div className="text-center py-8">
+                <span className="material-symbols-outlined text-5xl text-primary mb-4">check_circle</span>
+                <h3 className="text-xl font-bold text-primary mb-2">{t('ratingSuccessTitle')}</h3>
+                <p className="text-sm text-on-surface-variant mb-6">{t('ratingSuccessMsg')}</p>
+                <button
+                  onClick={() => closeRatingModal(true)}
+                  className="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition"
+                >
+                  {t('ratingClose')}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

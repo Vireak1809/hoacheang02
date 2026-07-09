@@ -1,3 +1,4 @@
+// src/components/Layout/Header.jsx
 import React, { useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LogoIcon from "../../assets/logo.svg";
@@ -20,6 +21,11 @@ const translations = {
   account: { km: 'គណនី', en: 'Account' },
   khmer: { km: 'ខ្មែរ', en: 'Khmer' },
   english: { km: 'English', en: 'English' },
+  aboutUs: { km: 'អំពីយើង', en: 'About Us' },
+  contact: { km: 'ទំនាក់ទំនង', en: 'Contact' },
+  howItWorks: { km: 'របៀបដំណើរការ', en: 'How It Works' },
+  login: { km: 'ចូលប្រើ', en: 'Login' },
+  register: { km: 'បង្កើតគណនី', en: 'Create Account' },
 };
 
 const LanguageToggle = ({ lang, setLang, compact }) => (
@@ -53,7 +59,7 @@ const LanguageToggle = ({ lang, setLang, compact }) => (
 
 const Header = () => {
   const { lang, setLang } = useLanguage();
-  const { logout } = useAuth();
+  const { logout, isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -64,11 +70,22 @@ const Header = () => {
 
   const t = (key) => translations[key]?.[lang] || key;
 
-  const navLinks = [
+  // ===== Guest Navigation =====
+  const guestNavLinks = [
+    { path: '/', label: t('home') },
+    { path: '/services', label: t('services') },
+    { path: '/how-it-works', label: t('howItWorks') },
+    { path: '/about', label: t('aboutUs') },
+    { path: '/contact', label: t('contact') },
+  ];
+
+  // ===== Logged-in Navigation =====
+  const loggedInNavLinks = [
     { path: '/dashboard', label: t('home') },
-    { path: '/technicians', label: t('findTechnician') },
     { path: '/booking/history', label: t('booking') },
     { path: '/messages', label: t('messages') },
+    { path: '/about', label: t('aboutUs') },
+    { path: '/contact', label: t('contact') },
   ];
 
   const serviceSubLinks = [
@@ -77,41 +94,76 @@ const Header = () => {
     { path: '/select/ac', label: t('ac') },
   ];
 
+  // Extra booking-flow paths for Services tab
+  const serviceFlowPaths = [
+    '/problem-detail',
+    '/map-location',
+    '/booking/confirm',
+    '/technicians',
+  ];
+
+  // Additional paths that belong under "Bookings"
+  const bookingsExtraPaths = [
+    '/service/in-progress',
+    '/booking/track',
+  ];
+
   const isActive = (path) => location.pathname === path;
-  const isServiceActive = serviceSubLinks.some(link => location.pathname.startsWith(link.path));
+  const isServiceActive =
+    serviceSubLinks.some(link => location.pathname.startsWith(link.path)) ||
+    serviceFlowPaths.some(path => location.pathname.startsWith(path));
 
-  // useCallback to avoid unnecessary re‑creations (optional)
   const handleLogout = useCallback(() => {
-    logout();          // updates AuthContext → isLoggedIn = false
-    navigate('/login');     // redirect to login (public page)
-  }, [logout, navigate]);
+    logout();
+    window.location.href = '/';
+  }, [logout]);
 
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-outline-variant shadow-sm h-16 md:h-20">
-      <div className="container-custom h-full flex items-center justify-between gap-2">
-        {/* Logo */}
-        <Link to="/dashboard" className="shrink-0 text-2xl md:text-3xl font-bold text-primary hover:opacity-80 transition">
-          <img src={LogoIcon} alt="logo" className="w-9 h-9 md:w-10 md:h-10" />
+  // ===== Render Desktop Nav =====
+  const renderNavItems = () => {
+    if (!isLoggedIn) {
+      return guestNavLinks.map((link) => (
+        <Link
+          key={link.path}
+          to={link.path}
+          className={`text-sm font-medium transition h-full flex items-center border-b-2 ${
+            isActive(link.path)
+              ? 'text-primary border-primary'
+              : 'text-on-surface-variant border-transparent hover:text-primary hover:border-primary/30'
+          }`}
+        >
+          {link.label}
         </Link>
+      ));
+    }
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6 h-full">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`text-sm font-medium transition h-full flex items-center border-b-2 ${
-                isActive(link.path)
-                  ? 'text-primary border-primary'
-                  : 'text-on-surface-variant border-transparent hover:text-primary hover:border-primary/30'
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+    const items = [];
+    loggedInNavLinks.forEach((link, index) => {
+      let isLinkActive = isActive(link.path);
 
-          {/* Services Dropdown */}
+      if (link.path === '/booking/history') {
+        isLinkActive = isLinkActive || bookingsExtraPaths.some(
+          path => location.pathname.startsWith(path)
+        );
+      }
+
+      if (index === 0) {
+        items.push(
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`text-sm font-medium transition h-full flex items-center border-b-2 ${
+              isLinkActive
+                ? 'text-primary border-primary'
+                : 'text-on-surface-variant border-transparent hover:text-primary hover:border-primary/30'
+            }`}
+          >
+            {link.label}
+          </Link>
+        );
+        // Services dropdown
+        items.push(
           <div
+            key="services-dropdown"
             className="relative h-full flex items-center"
             onMouseEnter={() => setServicesDropdown(true)}
             onMouseLeave={() => setServicesDropdown(false)}
@@ -126,7 +178,6 @@ const Header = () => {
               {t('services')}
               <span className="material-symbols-outlined text-sm">expand_more</span>
             </button>
-
             <div
               className={`absolute left-0 top-full mt-0 w-48 bg-white rounded-xl shadow-xl border border-outline-variant overflow-hidden transition-all duration-200 ${
                 servicesDropdown ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
@@ -145,50 +196,89 @@ const Header = () => {
               ))}
             </div>
           </div>
+        );
+      } else {
+        items.push(
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`text-sm font-medium transition h-full flex items-center border-b-2 ${
+              isLinkActive
+                ? 'text-primary border-primary'
+                : 'text-on-surface-variant border-transparent hover:text-primary hover:border-primary/30'
+            }`}
+          >
+            {link.label}
+          </Link>
+        );
+      }
+    });
+    return items;
+  };
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-outline-variant shadow-sm h-16 md:h-20">
+      <div className="container-custom h-full flex items-center justify-between gap-2">
+        {/* Logo */}
+        <Link to={isLoggedIn ? "/dashboard" : "/"} className="shrink-0 flex items-center">
+          <img src={LogoIcon} alt="logo" className="h-8 w-8 md:h-10 md:w-10 object-contain" />
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full">
+          {renderNavItems()}
         </nav>
 
         {/* Right Actions */}
         <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
-          {/* Language Switcher */}
           <LanguageToggle lang={lang} setLang={setLang} compact />
 
-          {/* Notifications */}
-          <button className="relative p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition">
-            <span className="material-symbols-outlined text-xl">notifications</span>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary rounded-full border-2 border-surface"></span>
-          </button>
+          {isLoggedIn ? (
+            <>
+              <button className="relative p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition">
+                <span className="material-symbols-outlined text-xl">notifications</span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary rounded-full border-2 border-surface"></span>
+              </button>
 
-          {/* User Profile (desktop/tablet) */}
-          <div
-            className="hidden sm:block relative group cursor-pointer"
-            onMouseEnter={() => setUserDropdown(true)}
-            onMouseLeave={() => setUserDropdown(false)}
-          >
-            <div className="flex items-center gap-2 pl-3 border-l border-outline-variant">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-primary-container flex items-center justify-center text-white overflow-hidden">
-                <span className="material-symbols-outlined">account_circle</span>
-              </div>
-              <span className="hidden md:block text-sm font-medium">សុភា</span>
-              <span className="material-symbols-outlined text-sm">expand_more</span>
-            </div>
+              {/* User Profile */}
+              <div
+                className="hidden sm:block relative group cursor-pointer"
+                onMouseEnter={() => setUserDropdown(true)}
+                onMouseLeave={() => setUserDropdown(false)}
+              >
+                <div className="flex items-center gap-2 pl-3 border-l border-outline-variant">
+                  <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-primary-container flex items-center justify-center text-white overflow-hidden">
+                    <span className="material-symbols-outlined">account_circle</span>
+                  </div>
+                  <span className="hidden md:block text-sm font-medium">សុភា</span>
+                  <span className="material-symbols-outlined text-sm">expand_more</span>
+                </div>
 
-            <div className={`absolute right-0 top-[80%] w-56 bg-white rounded-xl shadow-xl border border-outline-variant overflow-hidden transition-all duration-200 ${
-              userDropdown ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
-            }`}>
-              <div className="py-2">
-                <Link to="/profile" className="block px-4 py-2 text-sm hover:bg-surface-container transition">{t('accountInfo')}</Link>
-                <Link to="/booking/history" className="block px-4 py-2 text-sm hover:bg-surface-container transition">{t('myBookings')}</Link>
-                <Link to="/help" className="block px-4 py-2 text-sm hover:bg-surface-container transition">{t('help')}</Link>
-                <div className="border-t border-outline-variant my-1"></div>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-sm text-error hover:bg-error-container/10 transition"
-                >
-                  {t('logout')}
-                </button>
+                <div className={`absolute right-0 top-[80%] w-56 bg-white rounded-xl shadow-xl border border-outline-variant overflow-hidden transition-all duration-200 ${
+                  userDropdown ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                }`}>
+                  <div className="py-2">
+                    <Link to="/profile" className="block px-4 py-2 text-sm hover:bg-surface-container transition">{t('accountInfo')}</Link>
+                    {/* Removed My Bookings link */}
+                    <Link to="/help" className="block px-4 py-2 text-sm hover:bg-surface-container transition">{t('help')}</Link>
+                    <div className="border-t border-outline-variant my-1"></div>
+                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-error hover:bg-error-container/10 transition">
+                      {t('logout')}
+                    </button>
+                  </div>
+                </div>
               </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link to="/login" className="px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 rounded-xl transition">
+                {t('login')}
+              </Link>
+              <Link to="/register" className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:opacity-90 transition">
+                {t('register')}
+              </Link>
             </div>
-          </div>
+          )}
 
           {/* Mobile Menu Toggle */}
           <button
@@ -201,88 +291,126 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ===== Mobile Menu ===== */}
       <div
         className={`lg:hidden bg-surface border-b border-outline-variant shadow-lg overflow-hidden transition-all duration-300 ${
           mobileOpen ? 'max-h-[85vh] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-4 py-3 space-y-0.5">
-          {/* User info for small screens */}
-          <div className="flex sm:hidden items-center gap-3 py-3 mb-1 border-b border-outline-variant/30">
-            <div className="w-11 h-11 rounded-full bg-primary-container flex items-center justify-center text-white shrink-0">
-              <span className="material-symbols-outlined">account_circle</span>
-            </div>
-            <div>
-              <p className="text-sm font-semibold">សុភា</p>
-              <Link to="/profile" className="text-xs text-primary" onClick={() => setMobileOpen(false)}>
-                {t('accountInfo')}
-              </Link>
-            </div>
-          </div>
-
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`block py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
-                isActive(link.path) ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
-              }`}
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          {/* Services mobile accordion */}
-          <div>
-            <button
-              onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-              className={`w-full flex items-center justify-between py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
-                isServiceActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
-              }`}
-            >
-              <span>{t('services')}</span>
-              <span
-                className="material-symbols-outlined text-sm transition-transform duration-200"
-                style={{ transform: mobileServicesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-              >
-                expand_more
-              </span>
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-300 bg-surface-container/40 rounded-lg ${
-                mobileServicesOpen ? 'max-h-40 opacity-100 my-1' : 'max-h-0 opacity-0'
-              }`}
-            >
-              {serviceSubLinks.map((sub) => (
-                <Link
-                  key={sub.path}
-                  to={sub.path}
-                  className={`block pl-6 py-2.5 text-sm transition ${
-                    isActive(sub.path) ? 'text-primary font-medium' : 'text-on-surface-variant hover:text-primary'
-                  }`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {sub.label}
+          {isLoggedIn && (
+            <div className="flex sm:hidden items-center gap-3 py-3 mb-1 border-b border-outline-variant/30">
+              <div className="w-11 h-11 rounded-full bg-primary-container flex items-center justify-center text-white shrink-0">
+                <span className="material-symbols-outlined">account_circle</span>
+              </div>
+              <div>
+                <p className="text-sm font-semibold">សុភា</p>
+                <Link to="/profile" className="text-xs text-primary" onClick={() => setMobileOpen(false)}>
+                  {t('accountInfo')}
                 </Link>
-              ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          <Link
-            to="/help"
-            className="block py-3 text-sm text-on-surface-variant hover:text-primary border-b border-outline-variant/30 transition"
-            onClick={() => setMobileOpen(false)}
-          >
-            {t('help')}
-          </Link>
-          <button
-            onClick={() => { handleLogout(); setMobileOpen(false); }}
-            className="block w-full text-left py-3 text-sm font-medium text-error hover:bg-error-container/10 transition rounded-lg mt-1"
-          >
-            {t('logout')}
-          </button>
+          {!isLoggedIn ? (
+            guestNavLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`block py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
+                  isActive(link.path) ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
+                }`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))
+          ) : (
+            <>
+              {loggedInNavLinks.map((link) => {
+                if (link.label === t('services')) return null;
+
+                let isLinkActive = isActive(link.path);
+                if (link.path === '/booking/history') {
+                  isLinkActive = isLinkActive || bookingsExtraPaths.some(
+                    path => location.pathname.startsWith(path)
+                  );
+                }
+
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`block py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
+                      isLinkActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
+                    }`}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+
+              {/* Services accordion */}
+              <div>
+                <button
+                  onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                  className={`w-full flex items-center justify-between py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
+                    isServiceActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
+                  }`}
+                >
+                  <span>{t('services')}</span>
+                  <span
+                    className="material-symbols-outlined text-sm transition-transform duration-200"
+                    style={{ transform: mobileServicesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  >
+                    expand_more
+                  </span>
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 bg-surface-container/40 rounded-lg ${
+                    mobileServicesOpen ? 'max-h-40 opacity-100 my-1' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  {serviceSubLinks.map((sub) => (
+                    <Link
+                      key={sub.path}
+                      to={sub.path}
+                      className={`block pl-6 py-2.5 text-sm transition ${
+                        isActive(sub.path) ? 'text-primary font-medium' : 'text-on-surface-variant hover:text-primary'
+                      }`}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {sub.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <Link to="/help" className="block py-3 text-sm text-on-surface-variant hover:text-primary border-b border-outline-variant/30 transition" onClick={() => setMobileOpen(false)}>
+                {t('help')}
+              </Link>
+              <button onClick={() => { handleLogout(); setMobileOpen(false); }} className="block w-full text-left py-3 text-sm font-medium text-error hover:bg-error-container/10 transition rounded-lg mt-1">
+                {t('logout')}
+              </button>
+            </>
+          )}
+
+          {!isLoggedIn && (
+            <>
+              <Link to="/help" className="block py-3 text-sm text-on-surface-variant hover:text-primary border-b border-outline-variant/30 transition" onClick={() => setMobileOpen(false)}>
+                {t('help')}
+              </Link>
+              <div className="flex gap-3 mt-3">
+                <Link to="/login" className="flex-1 text-center py-3 text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary/5 transition">
+                  {t('login')}
+                </Link>
+                <Link to="/register" className="flex-1 text-center py-3 text-sm font-medium bg-primary text-white rounded-lg hover:opacity-90 transition">
+                  {t('register')}
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>

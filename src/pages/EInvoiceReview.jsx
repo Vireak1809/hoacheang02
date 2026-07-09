@@ -1,6 +1,6 @@
 // src/pages/EInvoiceReview.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const translations = {
@@ -36,6 +36,8 @@ const translations = {
 const EInvoiceReview = () => {
   const { lang } = useLanguage();
   const t = (key) => translations[key]?.[lang] || key;
+  const [searchParams] = useSearchParams();
+  const source = searchParams.get('source'); // 'history' when coming from completed booking
 
   return (
     <div className="container-custom py-6 md:py-10 animate-enter">
@@ -48,7 +50,7 @@ const EInvoiceReview = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Invoice */}
-        <div className="lg:col-span-8 space-y-6">
+        <div className={source === 'history' ? 'lg:col-span-12' : 'lg:col-span-8 space-y-6'}>
           {/* Header Card */}
           <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant relative">
             <div className="absolute top-4 right-4">
@@ -77,7 +79,7 @@ const EInvoiceReview = () => {
           </div>
 
           {/* Table */}
-          <div className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden mt-6">
             <div className="bg-surface-container-high px-6 py-4 border-b border-outline-variant">
               <h2 className="text-xl font-bold text-primary">{t('pageTitle')} – {t('summaryTitle')}</h2>
             </div>
@@ -123,50 +125,52 @@ const EInvoiceReview = () => {
           </div>
         </div>
 
-        {/* Right: Summary */}
-        <div className="lg:col-span-4">
-          <div className="sticky top-24 space-y-6">
-            <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-2 border-primary">
-              <h3 className="text-2xl font-bold text-primary text-center mb-6">{t('summaryTitle')}</h3>
-              <div className="space-y-4 py-4 border-y border-outline-variant mb-6">
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">{t('subtotal')}</span>
-                  <span className="font-bold">$40.00</span>
+        {/* Right: Summary – hidden when source=history */}
+        {source !== 'history' && (
+          <div className="lg:col-span-4">
+            <div className="sticky top-24 space-y-6">
+              <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-2 border-primary">
+                <h3 className="text-2xl font-bold text-primary text-center mb-6">{t('summaryTitle')}</h3>
+                <div className="space-y-4 py-4 border-y border-outline-variant mb-6">
+                  <div className="flex justify-between">
+                    <span className="text-on-surface-variant">{t('subtotal')}</span>
+                    <span className="font-bold">$40.00</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-on-surface-variant">{t('taxService')}</span>
+                    <span className="font-bold">$1.50</span>
+                  </div>
+                  <div className="flex justify-between text-2xl text-primary">
+                    <span>{t('summaryTotal')}</span>
+                    <span>$41.50</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">{t('taxService')}</span>
-                  <span className="font-bold">$1.50</span>
-                </div>
-                <div className="flex justify-between text-2xl text-primary">
-                  <span>{t('summaryTotal')}</span>
-                  <span>$41.50</span>
-                </div>
+                <Link to="/payment">
+                  <button className="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined">check_circle</span> {t('confirmPayment')}
+                  </button>
+                </Link>
+                <Link to="/rating">
+                  <button className="w-full mt-3 py-4 bg-transparent text-secondary border-2 border-secondary font-bold rounded-xl hover:bg-secondary-fixed transition flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined">edit_note</span> {t('edit')}
+                  </button>
+                </Link>
               </div>
-              <Link to="/payment">
-                <button className="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg hover:opacity-90 transition flex items-center justify-center gap-2">
-                  <span className="material-symbols-outlined">check_circle</span> {t('confirmPayment')}
-                </button>
-              </Link>
-              <Link to="/rating">
-                <button className="w-full mt-3 py-4 bg-transparent text-secondary border-2 border-secondary font-bold rounded-xl hover:bg-secondary-fixed transition flex items-center justify-center gap-2">
-                  <span className="material-symbols-outlined">edit_note</span> {t('edit')}
-                </button>
-              </Link>
-            </div>
 
-            <div className="p-6 bg-surface-container rounded-xl border border-outline-variant">
-              <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary">security</span>
-                <div>
-                  <h4 className="text-sm font-medium text-primary mb-1">{t('securePaymentTitle')}</h4>
-                  <p className="text-xs text-on-surface-variant leading-relaxed">
-                    {t('securePaymentDesc')}
-                  </p>
+              <div className="p-6 bg-surface-container rounded-xl border border-outline-variant">
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary">security</span>
+                  <div>
+                    <h4 className="text-sm font-medium text-primary mb-1">{t('securePaymentTitle')}</h4>
+                    <p className="text-xs text-on-surface-variant leading-relaxed">
+                      {t('securePaymentDesc')}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

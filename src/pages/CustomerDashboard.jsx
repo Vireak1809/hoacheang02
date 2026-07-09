@@ -1,4 +1,4 @@
-// pages/CustomerDashboard.jsx
+// src/pages/CustomerDashboard.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -6,25 +6,38 @@ import { useLanguage } from '../contexts/LanguageContext';
 const translations = {
   greeting: { km: 'សួស្ដី, សុភា', en: 'Hello, Sophea' },
   greetingQuestion: { km: 'តើអ្នកត្រូវការជាងប្រភេទណាថ្ងៃនេះ?', en: 'What type of technician do you need today?' },
-  searchPlaceholder: { km: 'ស្វែងរកសេវាកម្ម...', en: 'Search services...' },
+  currentLocation: { km: 'ទីតាំងបច្ចុប្បន្ន', en: 'Current Location' },
+  locationAddress: { km: 'បុរីប៉េងហួត បឹងស្នោរ, ភ្នំពេញ', en: 'Peng Huot Borey, Boeung Snor, Phnom Penh' },
+  searchPlaceholder: { km: 'ស្វែងរកសេវាកម្ម (ឧទាហរណ៍៖ ជួសជុលម៉ាស៊ីនត្រជាក់...)', en: 'Search services (e.g. AC repair...)' },
   searchButton: { km: 'ស្វែងរក', en: 'Search' },
+  popularTitle: { km: 'សេវាកម្មពេញនិយម', en: 'Popular Services' },
+  viewAll: { km: 'មើលទាំងអស់', en: 'View All' },
   plumberLabel: { km: 'ជាងទឹក', en: 'Plumber' },
   plumberPrice: { km: 'ចាប់ផ្ដើមពី $15', en: 'Starting from $15' },
   electricianLabel: { km: 'ជាងអគ្គិសនី', en: 'Electrician' },
   electricianPrice: { km: 'ចាប់ផ្ដើមពី $20', en: 'Starting from $20' },
-  acLabel: { km: 'ម៉ាស៊ីនត្រជាក់', en: 'Air Conditioner' },
+  acLabel: { km: 'ជាងម៉ាស៊ីនត្រជាក់', en: 'Air Conditioner' },
   acPrice: { km: 'ចាប់ផ្ដើមពី $18', en: 'Starting from $18' },
   emergencyBadge: { km: 'សេវាបន្ទាន់ 24/7', en: '24/7 Emergency Service' },
   emergencyTitle: { km: 'ត្រូវការជាងបន្ទាន់?', en: 'Need an urgent repair?' },
-  emergencyDesc: { km: 'យើងមានបច្ចេកទេសជំនាញៗនៅក្បែរលោកអ្នកបំផុត។', en: 'We have skilled technicians near you.' },
+  emergencyDesc: { km: 'យើងមានបច្ចេកទេសជំនាញៗនៅក្បែរលោកអ្នកបំផុត ដែលអាចទៅដល់ក្នុងរយៈពេល ២០ នាទី។', en: 'We have skilled technicians near you, ready to arrive within 20 minutes.' },
   emergencyButton: { km: 'ហៅជាងបន្ទាន់', en: 'Call Emergency Technician' },
-  recentBookingTitle: { km: 'ការកក់ចុងក្រោយ', en: 'Recent Booking' },
-  recentTechName: { km: 'ជាង វិច្ឆិកា', en: 'Mr. Vicheka' },
-  recentTechSpecialty: { km: 'ជំនាញជួសជុលម៉ាស៊ីនត្រជាក់', en: 'AC Repair Specialist' },
-  recentStatus: { km: 'កំពុងមកដល់', en: 'On the way' },
-  totalLabel: { km: 'តម្លៃសរុប', en: 'Total' },
+  recentTitle: { km: 'ការកក់ចុងក្រោយ', en: 'Recent Booking' },
+  techName: { km: 'ជាង វិច្ឆិកា', en: 'Mr. Vicheka' },
+  techSpecialty: { km: 'ជំនាញជួសជុលម៉ាស៊ីនត្រជាក់', en: 'AC Repair Specialist' },
+  statusOnWay: { km: 'កំពុងមកដល់', en: 'On the way' },
+  timelineConfirmed: { km: 'បានបញ្ជាក់ការកក់', en: 'Booking Confirmed' },
+  timelineConfirmedTime: { km: 'ថ្ងៃនេះ, 09:30 AM', en: 'Today, 09:30 AM' },
+  timelineEnRoute: { km: 'ជាងកំពុងធ្វើដំណើរ', en: 'Technician is on the way' },
+  timelineEnRouteDetail: { km: 'នឹងមកដល់ក្នុងរយៈពេល ១០ នាទី', en: 'Arriving in 10 minutes' },
+  timelineCompleted: { km: 'ការងារត្រូវបានបញ្ចប់', en: 'Job Completed' },
+  timelineCompletedPending: { km: 'រង់ចាំការបញ្ជាក់', en: 'Awaiting confirmation' },
+  estimatedTotal: { km: 'តម្លៃសរុបប្រហាក់ប្រហែល', en: 'Estimated Total' },
   totalPrice: { km: '$18.00', en: '$18.00' },
   viewDetails: { km: 'មើលព័ត៌មានលម្អិត', en: 'View Details' },
+  tipsTitle: { km: 'គន្លឹះថែទាំផ្ទះ', en: 'Home Care Tips' },
+  tipsDesc: { km: 'តើលោកអ្នកដឹងទេថា ការលាងម៉ាស៊ីនត្រជាក់រាល់ ៦ខែម្តង ជួយសន្សំសំចៃអគ្គិសនីបានដល់ ២០%?', en: 'Did you know that cleaning your AC every 6 months can save up to 20% on electricity?' },
+  readMore: { km: 'អានបន្ថែម', en: 'Read More' },
 };
 
 const CustomerDashboard = () => {
@@ -32,98 +45,214 @@ const CustomerDashboard = () => {
   const t = (key) => translations[key]?.[lang] || key;
 
   const services = [
-    { icon: 'plumbing', labelKey: 'plumberLabel', priceKey: 'plumberPrice', link: '/select/plumber' },
-    { icon: 'electrical_services', labelKey: 'electricianLabel', priceKey: 'electricianPrice', link: '/select/electrician' },
-    { icon: 'ac_unit', labelKey: 'acLabel', priceKey: 'acPrice', link: '/select/ac' }
+    { icon: 'plumbing', labelKey: 'plumberLabel', priceKey: 'plumberPrice', link: '/select/plumber', accent: 'bg-blue-50 text-blue-600' },
+    { icon: 'electrical_services', labelKey: 'electricianLabel', priceKey: 'electricianPrice', link: '/select/electrician', accent: 'bg-amber-50 text-amber-600' },
+    { icon: 'ac_unit', labelKey: 'acLabel', priceKey: 'acPrice', link: '/select/ac', accent: 'bg-cyan-50 text-cyan-600' },
   ];
 
   return (
-    <div className="container-custom py-6 md:py-10 animate-enter">
-      {/* Greeting */}
-      <section className="mb-6 md:mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary">{t('greeting')}</h1>
-        <p className="text-lg text-on-surface-variant">{t('greetingQuestion')}</p>
+    <div className="animate-enter">
+      {/* Hero Section with Background Image */}
+      <section className="relative overflow-hidden pt-20 pb-16">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1732395805034-e0bf859665e5?w=1400&h=700&fit=crop&auto=format&q=80)'
+          }}
+        ></div>
+        {/* Light 10% tint so the photo itself stays clear and vivid */}
+        <div className="absolute inset-0 bg-primary/10"></div>
+
+        <div className="container-custom relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+            <div className="bg-primary/55 backdrop-blur-md rounded-2xl px-6 py-5 max-w-xl">
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 leading-snug">
+                {t('greeting')}
+              </h1>
+              <p className="text-lg text-white leading-relaxed">
+                {t('greetingQuestion')}
+              </p>
+            </div>
+            <div className="bg-white rounded-xl px-5 py-4 flex items-center gap-3 shadow-lg border border-white/30 shrink-0">
+              <span className="material-symbols-outlined text-primary text-2xl" data-weight="fill">location_on</span>
+              <div>
+                <p className="text-xs font-semibold text-on-surface-variant tracking-wide uppercase mb-0.5">{t('currentLocation')}</p>
+                <p className="text-sm font-semibold text-primary">{t('locationAddress')}</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-12 max-w-2xl">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                <span className="material-symbols-outlined text-on-surface-variant">search</span>
+              </div>
+              <input
+                className="w-full pl-14 pr-32 py-4 bg-white border-none rounded-2xl shadow-lg focus:ring-2 focus:ring-secondary/50 transition-all group-hover:shadow-xl outline-none text-base text-on-surface placeholder:text-on-surface-variant"
+                placeholder={t('searchPlaceholder')}
+                type="text"
+              />
+              <Link to="/technicians">
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition-all">
+                  {t('searchButton')}
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Search */}
-      <div className="max-w-2xl mb-8">
-        <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
-          <input
-            className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl shadow-lg focus:ring-2 focus:ring-primary/20 outline-none text-base"
-            placeholder={t('searchPlaceholder')}
-          />
-          <Link to="/technicians">
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:opacity-90 transition">
-              {t('searchButton')}
-            </button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Service Categories */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        {services.map((svc, idx) => (
-          <Link
-            key={idx}
-            to={svc.link}
-            className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition border border-transparent hover:border-primary/10 text-center"
-          >
-            <div className="w-20 h-20 rounded-full bg-surface-container-lowest flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-              <span className="material-symbols-outlined text-4xl text-primary">{svc.icon}</span>
+      {/* Main Content Area */}
+      <section className="container-custom pt-10 relative z-20 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          {/* Left Column */}
+          <div className="col-span-12 md:col-span-8 flex flex-col gap-8">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-primary">{t('popularTitle')}</h2>
+              <Link to="/services" className="text-primary text-sm font-semibold flex items-center gap-1 hover:underline">
+                {t('viewAll')} <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </Link>
             </div>
-            <h3 className="text-xl font-bold text-primary">{t(svc.labelKey)}</h3>
-            <p className="text-sm text-on-surface-variant">{t(svc.priceKey)}</p>
-          </Link>
-        ))}
-      </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-2">
+              {services.map((svc, idx) => (
+                <Link
+                  key={idx}
+                  to={svc.link}
+                  className="group bg-white rounded-2xl p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-outline-variant/40 hover:border-primary/20 flex flex-col items-center text-center cursor-pointer"
+                >
+                  <div className={`w-20 h-20 rounded-full ${svc.accent} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-200`}>
+                    <span className="material-symbols-outlined text-4xl" data-weight="fill">
+                      {svc.icon}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-primary mb-2">{t(svc.labelKey)}</h3>
+                  <p className="text-sm font-medium text-on-surface-variant">{t(svc.priceKey)}</p>
+                </Link>
+              ))}
+            </div>
 
-      {/* Emergency Banner */}
-      <div className="relative rounded-3xl overflow-hidden mb-8">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
-        <div className="relative p-6 md:p-10 flex flex-col items-start gap-4 max-w-lg">
-          <span className="px-3 py-1 bg-secondary text-white rounded-full text-xs font-bold uppercase tracking-wider">
-            {t('emergencyBadge')}
-          </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">{t('emergencyTitle')}</h2>
-          <p className="text-white/80 text-base">{t('emergencyDesc')}</p>
-          <Link to="/problem-detail">
-            <button className="mt-2 bg-secondary hover:bg-secondary-container text-white px-6 md:px-8 py-3 md:py-4 rounded-xl text-base md:text-lg font-bold shadow-lg hover:scale-105 transition flex items-center gap-2">
-              <span className="material-symbols-outlined">call</span> {t('emergencyButton')}
-            </button>
-          </Link>
-        </div>
-      </div>
+            {/* Emergency Banner with Background Image & Technician Photo */}
+            <div className="relative rounded-3xl overflow-hidden min-h-[220px]">
+              {/* Background Image */}
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: 'url(https://images.unsplash.com/photo-1561400555-786780284b67?w=900&h=600&fit=crop&auto=format&q=80)'
+                }}
+              ></div>
 
-      {/* Recent Booking */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-outline-variant/30 max-w-md">
-        <h2 className="text-2xl font-bold text-primary mb-4">{t('recentBookingTitle')}</h2>
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-surface-container overflow-hidden">
-            <img
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_oRyXbP503tpXnC3vuL68JH0woLhiBJLQ4T92NIxEeIi-pFaUKHuW1CXVd9icuXDJogc5gw1O4q6WDDdZ0meQ5HuD62qBwQbhN9CvnpQgCUUGHpi1gKw_CzyCA4tOoY-SVRC5gEjvFKoNxFpysJxLOu2pugjpXZdplEMvgLPhYVZsfMycvMp-QMhdudO0O0Y7t5xRxi6BJKDtR74u8GZRSTOMqhHsSJwEcnmByVItOF3wJP3UI5Q3vdv1S3u45hxr5djBGWDlUzc"
-              alt="Technician"
-            />
+              {/* Overlay Gradient - near-opaque on the text side for guaranteed contrast */}
+              <div className="absolute inset-0 bg-gradient-to-r from-secondary from-45% via-secondary/92 to-secondary/60"></div>
+
+              {/* Content */}
+              <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 justify-between">
+                {/* Left: Text Content */}
+                <div className="flex flex-col items-start gap-5 max-w-lg">
+                  <span className="px-3 py-1.5 bg-white/25 backdrop-blur-sm text-white rounded-full text-xs font-bold uppercase tracking-wider border border-white/40">
+                    {t('emergencyBadge')}
+                  </span>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white leading-snug drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)]">{t('emergencyTitle')}</h2>
+                  <p className="text-white text-base leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">{t('emergencyDesc')}</p>
+                  <Link to="/problem-detail">
+                    <button className="mt-1 bg-white text-secondary px-6 md:px-8 py-3 md:py-4 rounded-xl text-base md:text-lg font-bold shadow-lg hover:scale-105 hover:bg-secondary-fixed transition-all flex items-center gap-2">
+                      <span className="material-symbols-outlined text-secondary">call</span>
+                      {t('emergencyButton')}
+                    </button>
+                  </Link>
+                </div>
+
+                {/* Right: Technician Image */}
+                <div className="hidden md:block relative shrink-0">
+                  <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-2xl overflow-hidden bg-white/10">
+                    <img
+                      src="https://images.unsplash.com/photo-1732395805034-e0bf859665e5?w=300&h=300&fit=crop&auto=format&q=80"
+                      alt="Skilled Technician"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 bg-green-500 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 border-2 border-white shadow-md">
+                    <span className="material-symbols-outlined text-sm">verified</span> Ready
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <h4 className="font-medium">{t('recentTechName')}</h4>
-            <p className="text-sm text-on-surface-variant">{t('recentTechSpecialty')}</p>
+
+          {/* Right Column */}
+          <div className="col-span-12 md:col-span-4 flex flex-col gap-8">
+            <h2 className="text-2xl font-bold text-primary">{t('recentTitle')}</h2>
+            <div className="bg-white rounded-3xl p-7 shadow-sm border border-outline-variant/40 flex flex-col gap-7">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl overflow-hidden shrink-0">
+                    <img
+                      className="w-full h-full object-cover"
+                      src="https://i.pravatar.cc/150?img=12"
+                      alt={t('techName')}
+                    />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-on-surface">{t('techName')}</h4>
+                    <p className="text-sm text-on-surface-variant">{t('techSpecialty')}</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1.5 bg-secondary-fixed text-on-secondary-fixed rounded-full text-xs font-bold uppercase whitespace-nowrap">
+                  {t('statusOnWay')}
+                </span>
+              </div>
+
+              {/* Timeline */}
+              <div className="relative pl-7 flex flex-col gap-6">
+                <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-surface-container-highest"></div>
+                <div className="relative flex items-center gap-3">
+                  <div className="absolute -left-[27px] w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[10px] text-white">check</span>
+                  </div>
+                  <div className="flex-grow">
+                    <p className="text-sm font-semibold text-on-surface">{t('timelineConfirmed')}</p>
+                    <p className="text-sm text-on-surface-variant">{t('timelineConfirmedTime')}</p>
+                  </div>
+                </div>
+                <div className="relative flex items-center gap-3">
+                  <div className="absolute -left-[27px] w-4 h-4 rounded-full bg-secondary border-4 border-secondary-fixed animate-pulse"></div>
+                  <div className="flex-grow">
+                    <p className="text-sm font-semibold text-on-surface">{t('timelineEnRoute')}</p>
+                    <p className="text-sm text-on-surface-variant">{t('timelineEnRouteDetail')}</p>
+                  </div>
+                </div>
+                <div className="relative flex items-center gap-3 opacity-50">
+                  <div className="absolute -left-[27px] w-4 h-4 rounded-full bg-outline-variant"></div>
+                  <div className="flex-grow">
+                    <p className="text-sm font-semibold text-on-surface">{t('timelineCompleted')}</p>
+                    <p className="text-sm text-on-surface-variant">{t('timelineCompletedPending')}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-5 border-t border-outline-variant flex flex-col gap-4">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-on-surface-variant font-medium">{t('estimatedTotal')}</span>
+                  <span className="font-bold text-primary text-base">{t('totalPrice')}</span>
+                </div>
+                <Link to="/booking/track">
+                  <button className="w-full py-3.5 border-2 border-primary text-primary rounded-xl text-sm font-semibold hover:bg-primary/5 transition-all">
+                    {t('viewDetails')}
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Tips Card */}
+            <div className="bg-primary-container rounded-3xl p-7 text-white">
+              <span className="material-symbols-outlined text-secondary text-3xl mb-3" data-weight="fill">lightbulb</span>
+              <h4 className="text-xl font-bold mb-3">{t('tipsTitle')}</h4>
+              <p className="text-on-primary-container text-base leading-relaxed mb-5">{t('tipsDesc')}</p>
+              <Link to="/help" className="text-secondary text-sm font-semibold flex items-center gap-1 hover:underline">
+                {t('readMore')} <span className="material-symbols-outlined text-sm">chevron_right</span>
+              </Link>
+            </div>
           </div>
-          <span className="ml-auto px-3 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full text-xs font-bold">
-            {t('recentStatus')}
-          </span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-on-surface-variant">{t('totalLabel')}</span>
-          <span className="font-bold text-primary">{t('totalPrice')}</span>
-        </div>
-        <Link to="/booking/track">
-          <button className="w-full mt-4 py-3 border border-primary text-primary rounded-xl text-sm font-medium hover:bg-primary/5 transition">
-            {t('viewDetails')}
-          </button>
-        </Link>
-      </div>
+      </section>
     </div>
   );
 };

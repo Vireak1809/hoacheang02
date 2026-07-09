@@ -21,10 +21,6 @@ const translations = {
   uploadText: { km: 'បញ្ចូលរូបភាព ឬ វីដេអូ', en: 'Upload image or video' },
   uploadMaxSize: { km: 'ទំហំអតិបរមា 20MB', en: 'Max size 20MB' },
   fileLabel: { km: 'ឯកសារ:', en: 'File:' },
-  urgencyLabel: { km: 'តម្រូវការពេលវេលា', en: 'Time Requirement' },
-  urgencyNormal: { km: 'ធម្មតា', en: 'Normal' },
-  urgencyEmergency: { km: 'បន្ទាន់', en: 'Emergency' },
-  urgencyPrebook: { km: 'កក់ទុក', en: 'Pre-book' },
   stepService: { km: 'សេវា', en: 'Service' },
   stepProblem: { km: 'បញ្ហា', en: 'Problem' },
   stepLocation: { km: 'ទីតាំង', en: 'Location' },
@@ -36,7 +32,6 @@ const translations = {
 const ProblemDetail = () => {
   const { lang } = useLanguage();
   const t = (key) => translations[key]?.[lang] || key;
-  const [urgency, setUrgency] = useState('normal');
   const [file, setFile] = useState(null);
 
   const problemOptions = [
@@ -45,12 +40,6 @@ const ProblemDetail = () => {
     { value: 'clogged', labelKey: 'problemTypeClogged' },
     { value: 'install', labelKey: 'problemTypeInstall' },
     { value: 'other', labelKey: 'problemTypeOther' },
-  ];
-
-  const urgencyOptions = [
-    { id: 'normal', icon: 'schedule', labelKey: 'urgencyNormal' },
-    { id: 'emergency', icon: 'bolt', labelKey: 'urgencyEmergency' },
-    { id: 'prebook', icon: 'calendar_today', labelKey: 'urgencyPrebook' },
   ];
 
   const steps = [
@@ -126,36 +115,6 @@ const ProblemDetail = () => {
           {file && (
             <p className="text-sm text-primary mt-2">{t('fileLabel')} {file.name}</p>
           )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-bold text-on-surface mb-2">{t('urgencyLabel')}</label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {urgencyOptions.map((opt) => (
-              <label key={opt.id} className="relative cursor-pointer">
-                <input
-                  checked={urgency === opt.id}
-                  className="peer sr-only"
-                  name="urgency"
-                  type="radio"
-                  value={opt.id}
-                  onChange={() => setUrgency(opt.id)}
-                />
-                <div className={`p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition ${
-                  urgency === opt.id
-                    ? opt.id === 'emergency'
-                      ? 'border-secondary bg-secondary-container/10'
-                      : 'border-primary bg-primary-container/5'
-                    : 'border-outline-variant hover:bg-surface-container-low'
-                }`}>
-                  <span className={`material-symbols-outlined ${
-                    urgency === opt.id ? 'text-primary' : 'text-on-surface-variant'
-                  }`}>{opt.icon}</span>
-                  <span className="text-sm">{t(opt.labelKey)}</span>
-                </div>
-              </label>
-            ))}
-          </div>
         </div>
 
         {/* Stepper */}

@@ -1,6 +1,6 @@
 // src/pages/BookingHistory.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const translations = {
@@ -14,6 +14,11 @@ const translations = {
   einvoice: { km: 'E-Invoice', en: 'E-Invoice' },
   track: { km: 'តាមដាន', en: 'Track' },
   rebook: { km: 'កក់ម្តងទៀត', en: 'Rebook' },
+  cancelBooking: { km: 'បោះបង់ការកក់', en: 'Cancel Booking' },
+  cancelConfirmTitle: { km: 'បញ្ជាក់ការបោះបង់', en: 'Confirm Cancellation' },
+  cancelConfirmMessage: { km: 'តើអ្នកពិតជាចង់បោះបង់ការកក់នេះមែនទេ?', en: 'Are you sure you want to cancel this booking?' },
+  confirmYes: { km: 'យល់ព្រម', en: 'Yes, cancel' },
+  confirmNo: { km: 'ទេ', en: 'No, go back' },
   technician: { km: 'ជាង', en: 'Technician' },
   dateLabel: { km: 'ថ្ងៃទី', en: 'Date' },
   total: { km: 'សរុប', en: 'Total' },
@@ -49,7 +54,7 @@ const bookingsData = [
     service: { km: 'ជួសជុលប្រព័ន្ធភ្លើង', en: 'Electrical Repair' },
     bookingId: '#HC-88102',
     status: 'cancelled',
-    technician: { km: 'លោក មិនទាន់កំណត់', en: 'Not Assigned' },
+    technician: { km: 'មិនទាន់កំណត់', en: 'Not Assigned' },
     date: { km: '១០ មករា ២០២៤', en: '10 Jan 2024' },
     price: '$30.00',
     icon: 'electric_bolt'
@@ -77,11 +82,21 @@ const borderColors = {
 const BookingHistory = () => {
   const { lang } = useLanguage();
   const t = (key) => translations[key]?.[lang] || key;
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
+  const [cancelModalId, setCancelModalId] = useState(null);
 
-  const filteredBookings = activeTab === 'all'
-    ? bookingsData
-    : bookingsData.filter(b => b.status === activeTab);
+  const filteredBookings = bookingsData.filter(b => activeTab === 'all' || b.status === activeTab);
+  const sortedBookings = [...filteredBookings].sort((a, b) => {
+    if (a.status === 'active' && b.status !== 'active') return -1;
+    if (b.status === 'active' && a.status !== 'active') return 1;
+    return 0;
+  });
+
+  const handleCancelConfirm = () => {
+    setCancelModalId(null);
+    navigate('/');
+  };
 
   const tabs = [
     { id: 'all', labelKey: 'tabAll' },
@@ -120,7 +135,7 @@ const BookingHistory = () => {
 
       {/* Booking Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredBookings.map((booking) => (
+        {sortedBookings.map((booking) => (
           <div
             key={booking.id}
             className={`relative bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm border-l-4 hover:shadow-md transition ${
@@ -157,30 +172,53 @@ const BookingHistory = () => {
                 <span className="material-symbols-outlined text-sm">payments</span> {t('total')}: {booking.price}
               </div>
             </div>
+
+            {/* Action Buttons */}
             <div className="flex gap-3">
-              <Link to={booking.inProgress ? '/service/in-progress' : '/booking/track'}>
-                <button className="flex-1 py-2.5 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary/5 transition">
-                  {t('viewDetail')}
+              {/* Left button – varies by status */}
+              {booking.inProgress ? (
+                <Link to="/service/in-progress" className="flex-1">
+                  <button className="w-full py-2.5 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary/5 transition">
+                    {t('viewDetail')}
+                  </button>
+                </Link>
+              ) : booking.status === 'completed' ? (
+                <Link to="/invoice?source=history" className="flex-1">
+                  <button className="w-full py-2.5 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary/5 transition flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined text-sm">receipt_long</span>
+                    {t('einvoice')}
+                  </button>
+                </Link>
+              ) : (
+                <Link to="/booking/track" className="flex-1">
+                  <button className="w-full py-2.5 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary/5 transition">
+                    {t('viewDetail')}
+                  </button>
+                </Link>
+              )}
+
+              {/* Right button – varies by status */}
+              {booking.inProgress ? (
+                <button
+                  onClick={() => setCancelModalId(booking.id)}
+                  className="flex-1 py-2.5 rounded-lg text-sm font-medium shadow-sm bg-error text-white hover:opacity-90 transition flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-sm">close</span>
+                  {t('cancelBooking')}
                 </button>
-              </Link>
-              <Link to={
-                booking.status === 'completed' ? '/invoice' :
-                booking.inProgress ? '/booking/track' : '/select/plumber'
-              }>
-                <button className={`flex-1 py-2.5 rounded-lg text-sm font-medium shadow-sm hover:opacity-90 transition flex items-center justify-center gap-2 ${
-                  booking.status === 'completed' ? 'bg-secondary text-white' :
-                  booking.inProgress ? 'bg-secondary text-white' : 'bg-secondary text-white'
-                }`}>
-                  <span className="material-symbols-outlined text-sm">reorder</span>
-                  {booking.status === 'completed' ? t('einvoice') :
-                   booking.inProgress ? t('track') : t('rebook')}
-                </button>
-              </Link>
+              ) : (
+                <Link to="/select/plumber" className="flex-1">
+                  <button className="w-full py-2.5 rounded-lg text-sm font-medium shadow-sm bg-secondary text-white hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined text-sm">refresh</span>
+                    {t('rebook')}
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         ))}
 
-        {/* Empty State (show when no results or optional static) */}
+        {/* Empty State */}
         <div className="hidden lg:flex flex-col items-center justify-center p-8 border-2 border-dashed border-outline-variant rounded-xl bg-surface-container-low text-center">
           <span className="material-symbols-outlined text-6xl text-primary/20 mb-4">event_note</span>
           <h4 className="text-xl font-bold text-primary mb-2">{t('emptyTitle')}</h4>
@@ -192,6 +230,33 @@ const BookingHistory = () => {
           </Link>
         </div>
       </div>
+
+      {/* Cancel Confirmation Modal */}
+      {cancelModalId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl animate-enter">
+            <div className="text-center mb-6">
+              <span className="material-symbols-outlined text-5xl text-error mb-3">warning</span>
+              <h3 className="text-xl font-bold text-on-surface">{t('cancelConfirmTitle')}</h3>
+              <p className="text-sm text-on-surface-variant mt-2">{t('cancelConfirmMessage')}</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setCancelModalId(null)}
+                className="flex-1 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant font-medium hover:bg-surface-container transition"
+              >
+                {t('confirmNo')}
+              </button>
+              <button
+                onClick={handleCancelConfirm}
+                className="flex-1 py-2.5 rounded-lg bg-error text-white font-medium hover:opacity-90 transition"
+              >
+                {t('confirmYes')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
