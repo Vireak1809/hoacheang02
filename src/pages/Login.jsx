@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-// Facebook SVG Icon (Bootstrap-style)
+// Facebook SVG Icon (unchanged)
 const FacebookIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -26,8 +26,9 @@ const translations = {
   fastDesc: { km: 'ជួសជុលបន្ទាន់ក្នុងរយៈពេលតិចជាង ៦០ នាទី។', en: 'Emergency repairs in under 60 mins.' },
   tabLogin: { km: 'ចូលគណនី', en: 'Login' },
   tabRegister: { km: 'បង្កើតគណនី', en: 'Create Account' },
-  phoneLabel: { km: 'លេខទូរស័ព្ទ', en: 'Phone Number' },
-  phonePlaceholder: { km: '០១២ ៣៤៥ ៦៧៨', en: '012 345 678' },
+  // Updated field label – now accepts both
+  phoneOrEmailLabel: { km: 'លេខទូរស័ព្ទ ឬ អ៊ីមែល', en: 'Phone or Email' },
+  phoneOrEmailPlaceholder: { km: '០១២ ៣៤៥ ៦៧៨ ឬ example@email.com', en: '012 345 678 or email@example.com' },
   passwordLabel: { km: 'ពាក្យសម្ងាត់', en: 'Password' },
   rememberMe: { km: 'ចងចាំខ្ញុំ', en: 'Remember me' },
   forgotPassword: { km: 'ភ្លេចពាក្យសម្ងាត់?', en: 'Forgot password?' },
@@ -108,14 +109,15 @@ const Login = () => {
 
           <div className="p-6">
             <form onSubmit={handleLogin} className="space-y-5">
+              {/* Phone or Email field */}
               <div>
-                <label className="text-sm font-medium text-on-surface block mb-1">{t('phoneLabel')}</label>
+                <label className="text-sm font-medium text-on-surface block mb-1">{t('phoneOrEmailLabel')}</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-xl">phone</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-xl">contact_mail</span>
                   <input
                     className="input-field pl-10"
-                    placeholder={t('phonePlaceholder')}
-                    type="tel"
+                    placeholder={t('phoneOrEmailPlaceholder')}
+                    type="text"          // allows both phone numbers and emails
                     required
                   />
                 </div>
@@ -163,12 +165,10 @@ const Login = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                {/* Google Button */}
                 <button type="button" className="flex items-center justify-center gap-2 py-3 border border-outline-variant rounded-xl hover:bg-surface-container transition">
                   <span className="material-symbols-outlined text-[#EA4335]">mail</span>
                   <span className="text-sm">{t('googleButton')}</span>
                 </button>
-                {/* Facebook Button with SVG Icon */}
                 <button type="button" className="flex items-center justify-center gap-2 py-3 border border-outline-variant rounded-xl hover:bg-surface-container transition">
                   <span className="text-[#1877F2]">
                     <FacebookIcon />
