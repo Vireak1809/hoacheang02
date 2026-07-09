@@ -1,7 +1,7 @@
 // src/components/Layout/Header.jsx
 import React, { useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ReactComponent as LogoIcon } from "../../assets/logo.svg";  // ← changed
+import logoSvg from "../../assets/logo.svg?raw";  // ← changed
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -221,7 +221,10 @@ const Header = () => {
       <div className="container-custom h-full flex items-center justify-between gap-2">
         {/* Logo – now an inline SVG component */}
         <Link to={isLoggedIn ? "/dashboard" : "/"} className="shrink-0 flex items-center">
-          <LogoIcon className="h-8 w-8 md:h-10 md:w-10" />
+          <div
+              className="h-8 w-8 md:h-10 md:w-10"
+              dangerouslySetInnerHTML={{ __html: logoSvg }}
+            />
         </Link>
 
         {/* Desktop Nav */}
