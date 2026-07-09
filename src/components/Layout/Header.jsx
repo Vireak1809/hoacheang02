@@ -327,9 +327,30 @@ const Header = () => {
             ))
           ) : (
             <>
-              {loggedInNavLinks.map((link) => {
-                if (link.label === t('services')) return null;
+              {/* Home link (first) */}
+              <Link
+                to="/dashboard"
+                className={`block py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
+                  isActive('/dashboard') ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
+                }`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {t('home')}
+              </Link>
 
+              {/* Services – now a direct link right after Home */}
+              <Link
+                to="/services"            // adjust if you have a general services page
+                className={`block py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
+                  isServiceActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
+                }`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {t('services')}
+              </Link>
+
+              {/* Remaining links (Booking, Messages, About, Contact) – skip "Home" and "Services" */}
+              {loggedInNavLinks.slice(1).map((link) => {
                 let isLinkActive = isActive(link.path);
                 if (link.path === '/booking/history') {
                   isLinkActive = isLinkActive || bookingsExtraPaths.some(
@@ -351,42 +372,7 @@ const Header = () => {
                 );
               })}
 
-              {/* Services accordion */}
-              <div>
-                <button
-                  onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                  className={`w-full flex items-center justify-between py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
-                    isServiceActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
-                  }`}
-                >
-                  <span>{t('services')}</span>
-                  <span
-                    className="material-symbols-outlined text-sm transition-transform duration-200"
-                    style={{ transform: mobileServicesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                  >
-                    expand_more
-                  </span>
-                </button>
-                <div
-                  className={`overflow-hidden transition-all duration-300 bg-surface-container/40 rounded-lg ${
-                    mobileServicesOpen ? 'max-h-40 opacity-100 my-1' : 'max-h-0 opacity-0'
-                  }`}
-                >
-                  {serviceSubLinks.map((sub) => (
-                    <Link
-                      key={sub.path}
-                      to={sub.path}
-                      className={`block pl-6 py-2.5 text-sm transition ${
-                        isActive(sub.path) ? 'text-primary font-medium' : 'text-on-surface-variant hover:text-primary'
-                      }`}
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {sub.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
+              {/* Help & Logout remain unchanged */}
               <Link to="/help" className="block py-3 text-sm text-on-surface-variant hover:text-primary border-b border-outline-variant/30 transition" onClick={() => setMobileOpen(false)}>
                 {t('help')}
               </Link>
@@ -396,6 +382,7 @@ const Header = () => {
             </>
           )}
 
+          {/* Guest bottom actions unchanged */}
           {!isLoggedIn && (
             <>
               <Link to="/help" className="block py-3 text-sm text-on-surface-variant hover:text-primary border-b border-outline-variant/30 transition" onClick={() => setMobileOpen(false)}>
