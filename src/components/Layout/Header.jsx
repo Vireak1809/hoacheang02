@@ -1,7 +1,7 @@
 // src/components/Layout/Header.jsx
 import React, { useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import LogoIcon from "../../assets/logo.svg";
+import { ReactComponent as LogoIcon } from "../../assets/logo.svg";  // ← changed
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -219,9 +219,9 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-outline-variant shadow-sm h-16 md:h-20">
       <div className="container-custom h-full flex items-center justify-between gap-2">
-        {/* Logo */}
+        {/* Logo – now an inline SVG component */}
         <Link to={isLoggedIn ? "/dashboard" : "/"} className="shrink-0 flex items-center">
-          <img src={LogoIcon} alt="logo" className="h-8 w-8 md:h-10 md:w-10 object-contain" />
+          <LogoIcon className="h-8 w-8 md:h-10 md:w-10" />
         </Link>
 
         {/* Desktop Nav */}
@@ -340,7 +340,7 @@ const Header = () => {
 
               {/* Services – now a direct link right after Home */}
               <Link
-                to="/services"            // adjust if you have a general services page
+                to="/services"
                 className={`block py-3 text-sm font-medium border-b border-outline-variant/30 transition ${
                   isServiceActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
                 }`}
