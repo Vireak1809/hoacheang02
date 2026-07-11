@@ -18,7 +18,7 @@ const translations = {
   electrician: { km: 'ជាងភ្លើង', en: 'Electrician' },
   ac: { km: 'ម៉ាស៊ីនត្រជាក់', en: 'Air Conditioner' },
   contact: { km: 'ទំនាក់ទំនង', en: 'Contact Us' },
-  phone: { km: '+855 12 345 678', en: '+855 12 345 678' },
+  phone: { km: '+855 96 243 5509', en: '+855 96 243 5509' },
   email: { km: 'info@haochang.com', en: 'info@haochang.com' },
   location: { km: 'ភ្នំពេញ, កម្ពុជា', en: 'Phnom Penh, Cambodia' },
   followUs: { km: 'តាមដានយើង', en: 'Follow Us' },
@@ -80,10 +80,10 @@ const Footer = () => {
   const t = (key) => translations[key]?.[lang] || key;
 
   const socialLinks = [
-    { icon: 'facebook', href: 'https://www.facebook.com/haochang', label: 'Facebook', color: 'facebook' },
-    { icon: 'telegram', href: 'https://t.me/haochang', label: 'Telegram', color: 'telegram' },
-    { icon: 'youtube', href: 'https://www.youtube.com/@haochang', label: 'YouTube', color: 'youtube' },
-    { icon: 'instagram', href: 'https://www.instagram.com/haochang', label: 'Instagram', color: 'instagram' },
+    { icon: 'facebook', href: 'https://www.facebook.com/share/1DPoX3wgQa/?mibextid=wwXIfr', label: 'Facebook', color: 'facebook' },
+    { icon: 'telegram', href: 'https://t.me/Thann_vireak', label: 'Telegram', color: 'telegram' },
+    { icon: 'youtube', href: '#', label: 'YouTube', color: 'youtube' },
+    { icon: 'instagram', href: '#', label: 'Instagram', color: 'instagram' },
   ];
 
   return (
